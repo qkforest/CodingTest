@@ -1,11 +1,11 @@
 import java.util.*;
+
 class Solution {
     public String solution(int[] numbers) {
         String answer = "";
-        
         String[] arr = new String[numbers.length];
-
-        for (int i = 0; i < arr.length; i++) {
+        
+        for(int i = 0; i < numbers.length; i++){
             arr[i] = String.valueOf(numbers[i]);
         }
         
@@ -13,11 +13,11 @@ class Solution {
         
         if(arr[0].equals("0"))
             answer = "0";
-        else{
-            for (String x: arr)
+        else {
+            for(String x : arr)
                 answer = answer + x;
         }
-        
+            
         return answer;
     }
 }
