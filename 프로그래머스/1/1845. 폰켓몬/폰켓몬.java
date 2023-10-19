@@ -3,7 +3,6 @@ import java.util.*;
 class Solution {
     public int solution(int[] nums) {
         int answer = 0;
-        int total = nums.length / 2;
         
         HashMap<Integer, Integer> dic = new HashMap<> ();
         
@@ -14,17 +13,12 @@ class Solution {
             dic.put(nums[i], c);
         }
         
-        if (dic.size() > total)
-            answer = total;
+        if (dic.size() > nums.length / 2)
+            answer = nums.length / 2;
         else
             answer = dic.size();
         
         return answer;
     }
     
-    public int factorial(int number) {
-        if (number > 1) 
-            return number * factorial(number - 1);
-        return number;
-    }
 }
