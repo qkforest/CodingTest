@@ -1,4 +1,3 @@
-import java.util.*;
 class Solution {
     public String solution(String polynomial) {
         String answer = "";
