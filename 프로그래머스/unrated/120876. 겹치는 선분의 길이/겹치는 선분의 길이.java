@@ -11,21 +11,18 @@ class Solution {
             else
                 answer += lines[1][1] - lines[1][0];
         }
-        System.out.println(answer);
         if(!(lines[1][0] >= lines[2][1]) && !(lines[1][1] <= lines[2][0])){
             if(lines[1][1] < lines[2][1])
                 answer += lines[1][1] - lines[2][0];
             else
                 answer += lines[2][1] - lines[2][0];
         }
-        System.out.println(answer);
         if(!(lines[0][0] >= lines[2][1]) && !(lines[0][1] <= lines[2][0])){
             if(lines[0][1] < lines[2][1])
                 answer += lines[0][1] - lines[2][0];
             else
                 answer += lines[2][1] - lines[2][0];
         }
-        System.out.println(answer);
         int x1 = lines[2][0], x2 = lines[0][1];
         if(lines[1][1] < x2 && lines[1][1] < lines[2][1])
             x2 = lines[1][1];
