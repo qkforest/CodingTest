@@ -5,8 +5,6 @@ class Solution {
     public int solution(String str1, String str2) {
         int sum = 0, same = 0;
         String temp = "";
-        //str1 = str1.replaceAll("[^a-zA-Z]", "").toLowerCase();
-        //str2 = str2.replaceAll("[^a-zA-Z]", "").toLowerCase();
         Map<String, Integer> s1 = new HashMap<>(), s2 = new HashMap<>();
         for(int i = 0; i < str1.length()-1; i++){
             if(Pattern.matches("^[a-zA-Z]*$", str1.substring(i, i+2))){
