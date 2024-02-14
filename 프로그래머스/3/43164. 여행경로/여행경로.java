@@ -22,7 +22,6 @@ class Solution {
             }
             return;
         }else{
-            //System.out.println(Arrays.toString(temp));
             for(int i = 0; i < tickets.length; i++){
                 if(start.equals(tickets[i][0])){
                     if(!visited[i]){
