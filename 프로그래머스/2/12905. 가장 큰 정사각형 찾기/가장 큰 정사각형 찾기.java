@@ -30,7 +30,6 @@ class Solution {
                 }
             }
         }
-        //System.out.println(Arrays.deepToString(board));
         answer = (int)Math.pow(answer, 2);
         return answer;
     }
