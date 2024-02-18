@@ -3,12 +3,6 @@ class Solution {
     public int solution(String s) {
         int len = s.length();
         int answer = len;
-        /*List<Integer> sizes = new ArrayList<>();
-        for(int i = 1; i < len; i++){
-            if(len % i == 0)
-                sizes.add(i);
-        }
-        System.out.println(sizes);*/
         for(int size = 1; size < len-1; size++){
             String pre = s.substring(0, size);
             String temp = "";
