@@ -34,7 +34,6 @@ class Solution {
                 else
                     now = "center";
             }
-             //System.out.println(Arrays.toString(answer));
         }
         return answer;
     }
