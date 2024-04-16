@@ -11,9 +11,14 @@ class Solution {
                     for(int b : set[i - j - 1]) {
                         set[i].add(a + b);
                         set[i].add(a - b);
+                        set[i].add(b - a);
                         set[i].add(a * b);
-                        if(b != 0)
+                        if(b != 0) {
                             set[i].add(a / b);
+                        }
+                        if(a != 0) {
+                            set[i].add(b / a);
+                        }
                     }
                 }
             }
