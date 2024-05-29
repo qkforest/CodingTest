@@ -1,45 +1,42 @@
 import java.util.*;
 class Solution {
-    public boolean[] connect, visited;
-    public int answer;
+    public boolean[] visitedWire;
+    public boolean[] visitedTower;
+    public int answer, len;
     public int solution(int n, int[][] wires) {
         answer = n;
-        for(int i = 0; i < n; i++){
-            connect = new boolean[n+1];
-            visited = new boolean[n+1];
-            bfs(i, n, wires); 
+        len = wires.length;
+        for(int i = 0; i < len; i++) {
+            visitedWire = new boolean[len];
+            visitedTower = new boolean[n+1];
+            visitedWire[i] = true;
+            bfs(i, n, wires);
         }
         return answer;
     }
-    public void bfs(int idx, int n, int[][] wires){
+    public void bfs(int idx, int n, int[][] wires) {
         Queue<Integer> q = new LinkedList<>();
-        int t = idx > 0 ? 0 : 1;
-        q.add(wires[t][0]);
-        q.add(wires[t][1]);
-		connect[wires[t][0]] = true;
-        connect[wires[t][1]] = true;
-        visited[t] = true;
-
-		while (!q.isEmpty()) {
-			int f = q.poll();
-			for (int i = 0; i < wires.length; i++) {
-				if(!visited[i] && (wires[i][0] == f || wires[i][1] == f)){
-                    if(i != idx){
-                        q.add(wires[i][0]);
+        int count = 1;
+        int start = wires[idx][0];
+        q.add(start);
+        visitedTower[start] = true;
+        while(!q.isEmpty()){
+            int now = q.poll();
+            for(int i = 0; i < len; i++){
+                if(!visitedWire[i]) {
+                    if(wires[i][0] == now && !visitedTower[wires[i][1]]) {
                         q.add(wires[i][1]);
-                        connect[wires[i][0]] = true;
-                        connect[wires[i][1]] = true;
-                        visited[i] = true;
+                        count++;
+                        visitedWire[i] = true;
                     }
-				}
-			}
-		}
-        int count = 0;
-        for(int i = 1; i <= n; i++){
-            if(connect[i]) count++;
+                    if(wires[i][1] == now && !visitedTower[wires[i][0]]) {
+                        q.add(wires[i][0]);
+                        count++;
+                        visitedWire[i] = true;
+                    }
+                }
+            }
         }
-        if(Math.abs(n-(count*2)) <= answer) {
-            answer = Math.abs(n-(count*2));
-        }
+        answer = Math.min(answer, Math.abs(count-(n-count)));
     }
 }
