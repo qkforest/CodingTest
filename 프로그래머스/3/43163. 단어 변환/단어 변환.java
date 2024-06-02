@@ -1,41 +1,39 @@
-import java.util.*;
-
-class Node{
-    String word;
-    int count;
-    Node(String word, int count){
-        this.count = count;
-        this.word = word;
-    }
-}
-
 class Solution {
-    int[] visited;
+    public boolean[] visited;
+    public int answer;
     public int solution(String begin, String target, String[] words) {
-        int answer = 0;
-        visited = new int[words.length];
-        if(Arrays.asList(words).contains(target))
-            answer = bfs(begin, target, words); 
+        answer = Integer.MAX_VALUE;
+        visited = new boolean[words.length];
+        dfs(begin, target, words, 0);
+        if(answer == Integer.MAX_VALUE) {
+            answer = 0;
+        }
         return answer;
     }
-    
-    public int bfs(String begin, String target, String[] words){
-        Queue<Node> queue = new LinkedList<>();
-        queue.add(new Node(begin, 0));
-        
-        while(!queue.isEmpty()){
-            Node c = queue.poll();
-            if(c.word.equals(target)) return c.count;
-            for(int i = 0; i < words.length ;i++){
-                int match = 0;
-                for(int j = 0; j < begin.length(); j++)
-                    if(c.word.charAt(j) == words[i].charAt(j)) match++;
-                if(visited[i] == 0 && match == begin.length()-1){
-                    queue.add(new Node(words[i], c.count+1));
-                    visited[i] = 1;
-                }
+    public void dfs(String now, String target, String[] words, int count) {
+        if(now.equals(target)){
+            answer = Math.min(answer, count);
+            return;
+        }
+        for(int i = 0; i < words.length; i++) {
+            if(!visited[i] && diff(now, words[i])){
+                visited[i] = true;
+                dfs(words[i], target, words, count+1);
+                visited[i] = false;
             }
         }
-        return 0;
+    }
+    public boolean diff(String a, String b){
+        int count = 0;
+        int len = a.length();
+        for(int i = 0; i < len; i++){
+            if(a.charAt(i) != b.charAt(i)){
+                count++;
+            }
+        }
+        if(count == 1) {
+            return true;
+        }
+        return false;
     }
 }
