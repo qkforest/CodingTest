@@ -2,7 +2,7 @@ import java.util.*;
 class Solution {
     public int solution(int N, int number) {
         Set<Integer>[] set = new HashSet[9];
-        for(int i = 1; i <= 8; i++) {
+        for(int i = 1; i < 9; i++) {
             set[i] = new HashSet<Integer>();
             set[i].add(Integer.parseInt(String.valueOf(N).repeat(i)));
             for(int j = 1; j < i; j++) {
