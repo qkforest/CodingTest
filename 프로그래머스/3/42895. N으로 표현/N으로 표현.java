@@ -1,24 +1,26 @@
 import java.util.*;
 class Solution {
     public int solution(int N, int number) {
-        Set<Integer>[] set = new HashSet[9];
-        for(int i = 1; i < 9; i++) {
-            set[i] = new HashSet<Integer>();
-            set[i].add(Integer.parseInt(String.valueOf(N).repeat(i)));
-            for(int j = 1; j < i; j++) {
-                for(int a : set[j]){
-                    for(int b : set[i-j]) {
-                        set[i].add(a-b);
-                        set[i].add(a+b);
-                        set[i].add(a*b);
+        int answer = 0;
+        String s = String.valueOf(N);
+        Set<Integer>[] dp = new HashSet[8];
+        for(int i = 0; i < 8; i++) {
+            dp[i] = new HashSet<>();
+            dp[i].add(Integer.parseInt(s.repeat(i+1)));
+            for(int j = 0; j < i; j++) {
+                for(int a : dp[j]){
+                    for(int b : dp[i - j - 1]) {
+                        dp[i].add(a + b);
+                        dp[i].add(a - b);
+                        dp[i].add(a * b);
                         if(b != 0) {
-                            set[i].add(a/b);
+                            dp[i].add(a / b);
                         }
                     }
                 }
             }
-            if(set[i].contains(number)){
-                return i;
+            if(dp[i].contains(number)) {
+                return i+1;
             }
         }
         return -1;
