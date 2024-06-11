@@ -1,26 +1,24 @@
-import java.util.*;
 class Solution {
     public long solution(int n, int[] times) {
-        Arrays.sort(times);
-        long answer = 1, low = 1, high = times[times.length-1] * (long)n;
-        while(low <= high){
-            long mid = (low + high) / 2;
-            if(!check(times, n, mid)) {
-                high = mid - 1;
+        long answer = 0;
+        long left = 0;
+        long right = 1000000000 * (long)n;
+        while(left <= right) {
+            long mid = (left + right) / 2;
+            if(count(mid, times) >= n) {
+                right = mid - 1;
                 answer = mid;
+            } else {
+                left = mid + 1;
             }
-            else 
-                low = mid + 1;
         }
         return answer;
     }
-     public static boolean check(int[] times, int n, long mid) {
-		long ppl = 0;
-		for (int time : times) {
-			ppl += mid/(long)time;
-            if(ppl >= n) 
-                return false;
-		}
-		return true; 
-	}
+    public long count(long totalTime, int[] times) {
+        long count = 0;
+        for(int time : times) {
+            count += totalTime/(long)time;
+        }
+        return count;
+    }
 }
