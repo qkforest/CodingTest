@@ -5,43 +5,43 @@ public class Solution {
     public int solution(int[] arrows) {
         int answer = 0;
         
-        Map<String, Edge> edges = new HashMap<>();
-        Edge v = new Edge(0, 0);
-        edges.put(v.id, v);
+        Map<String, Vertex> vertices = new HashMap<>();
+        Vertex v = new Vertex(0, 0);
+        vertices.put(v.id, v);
         
         for (int idx : arrows) {
             for (int i = 0; i < 2; i++) {
                 int x = v.x + directions[idx][1];
                 int y = v.y + directions[idx][0];
-                String id = Edge.id(x, y);
+                String id = Vertex.id(x, y);
 
-                if (!edges.containsKey(id)) {
-                    edges.put(id, new Edge(x, y));
-                } else if (!v.connectedEdges.contains(id)) {
+                if (!vertices.containsKey(id)) {
+                    vertices.put(id, new Vertex(x, y));
+                } else if (!v.connectedvertices.contains(id)) {
                     answer++;
                 }
 
-                Edge u = edges.get(id);
-                v.connectedEdges.add(u.id);
-                u.connectedEdges.add(v.id);
-                v = edges.get(id);
+                Vertex u = vertices.get(id);
+                v.connectedvertices.add(u.id);
+                u.connectedvertices.add(v.id);
+                v = vertices.get(id);
             }
         }
         
         return answer;
     }
     
-    public static class Edge {
+    public static class Vertex {
         public int x;
         public int y;
         public String id;
-        public Set<String> connectedEdges;
+        public Set<String> connectedvertices;
 
-        public Edge(int x, int y) {
+        public Vertex(int x, int y) {
             this.x = x;
             this.y = y;
             this.id = id(x, y);
-            this.connectedEdges = new HashSet<>();
+            this.connectedvertices = new HashSet<>();
         }
 
         public static String id(int x, int y) {
