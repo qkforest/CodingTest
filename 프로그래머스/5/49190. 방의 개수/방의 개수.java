@@ -6,25 +6,25 @@ public class Solution {
         int answer = 0;
         
         Map<String, Vertex> vertices = new HashMap<>();
-        Vertex v = new Vertex(0, 0);
-        vertices.put(v.id, v);
+        Vertex now = new Vertex(0, 0);
+        vertices.put(now.id, now);
         
         for (int idx : arrows) {
             for (int i = 0; i < 2; i++) {
-                int x = v.x + directions[idx][1];
-                int y = v.y + directions[idx][0];
+                int x = now.x + directions[idx][1];
+                int y = now.y + directions[idx][0];
                 String id = Vertex.id(x, y);
 
                 if (!vertices.containsKey(id)) {
                     vertices.put(id, new Vertex(x, y));
-                } else if (!v.connectedvertices.contains(id)) {
+                } else if (!now.connectedvertices.contains(id)) {
                     answer++;
                 }
 
-                Vertex u = vertices.get(id);
-                v.connectedvertices.add(u.id);
-                u.connectedvertices.add(v.id);
-                v = vertices.get(id);
+                Vertex next = vertices.get(id);
+                now.connectedvertices.add(next.id);
+                next.connectedvertices.add(now.id);
+                now = vertices.get(id);
             }
         }
         
