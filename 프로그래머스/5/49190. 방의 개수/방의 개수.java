@@ -1,51 +1,51 @@
 import java.util.*;
 public class Solution {
-    private static class Vertex {
-        public final int x;
-        public final int y;
-        public final String id;
-        public final Set<String> connectedVertices;
+    public int[][] directions = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
 
-        public Vertex(int x, int y) {
+    public int solution(int[] arrows) {
+        int answer = 0;
+        
+        Map<String, Edge> edges = new HashMap<>();
+        Edge v = new Edge(0, 0);
+        edges.put(v.id, v);
+        
+        for (int idx : arrows) {
+            for (int i = 0; i < 2; i++) {
+                int x = v.x + directions[idx][1];
+                int y = v.y + directions[idx][0];
+                String id = Edge.id(x, y);
+
+                if (!edges.containsKey(id)) {
+                    edges.put(id, new Edge(x, y));
+                } else if (!v.connectedEdges.contains(id)) {
+                    answer++;
+                }
+
+                Edge u = edges.get(id);
+                v.connectedEdges.add(u.id);
+                u.connectedEdges.add(v.id);
+                v = edges.get(id);
+            }
+        }
+        
+        return answer;
+    }
+    
+    public static class Edge {
+        public int x;
+        public int y;
+        public String id;
+        public Set<String> connectedEdges;
+
+        public Edge(int x, int y) {
             this.x = x;
             this.y = y;
             this.id = id(x, y);
-            this.connectedVertices = new HashSet<>();
+            this.connectedEdges = new HashSet<>();
         }
 
         public static String id(int x, int y) {
             return String.format("(%d, %d)", x, y);
         }
-    }
-
-    private static final int[] dx = {0, 1, 1, 1, 0, -1, -1, -1};
-    private static final int[] dy = {-1, -1, 0, 1, 1, 1, 0, -1};
-
-    public int solution(int[] arrows) {
-        int answer = 0;
-
-        Map<String, Vertex> vertices = new HashMap<>();
-
-        Vertex v = new Vertex(0, 0);
-        vertices.put(v.id, v);
-        for (int d : arrows) {
-            for (int i = 0; i < 2; i++) {
-                int x = v.x + dx[d];
-                int y = v.y + dy[d];
-                String id = Vertex.id(x, y);
-
-                if (!vertices.containsKey(id)) {
-                    vertices.put(id, new Vertex(x, y));
-                } else if (!v.connectedVertices.contains(id)) {
-                    answer++;
-                }
-
-                Vertex u = vertices.get(id);
-                v.connectedVertices.add(u.id);
-                u.connectedVertices.add(v.id);
-                v = vertices.get(id);
-            }
-        }
-        return answer;
     }
 }
