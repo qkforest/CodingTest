@@ -1,12 +1,12 @@
 class Solution {
     public int maxNumberOfAlloys(int n, int k, int budget, List<List<Integer>> composition, List<Integer> stock, List<Integer> cost) {
-        long answer = 0;
-        long max = Collections.max(stock);
+        int answer = 0;
+        int max = Collections.max(stock);
         for(int i = 0; i < k; i++) {
-            long left = 0;
-            long right = budget + max;
+            int left = 0;
+            int right = budget + max;
             while(left <= right) {
-                long mid = (left + right) / 2;
+                int mid = (left + right) / 2;
                 if(calculate(n, composition.get(i), stock, cost, mid, budget)) {
                     left = mid + 1;
                     answer = Math.max(answer, mid);
@@ -15,7 +15,7 @@ class Solution {
                 }
             }
         }
-        return (int)answer;
+        return answer;
     }
     public boolean calculate(int n, List<Integer> com, List<Integer> stock, List<Integer> cost, long mid, int budget) {
         long sum = 0;
