@@ -1,32 +1,29 @@
-import java.util.*;
 class Solution {
     public int nextGreaterElement(int n) {
         char[] digits = String.valueOf(n).toCharArray();
-        int length = digits.length;
-        int i = length - 2;
-        while (i >= 0 && digits[i] >= digits[i + 1]) {
-            i--;
+        int len = digits.length;
+        int left = len - 2;
+        while (left >= 0 && digits[left] >= digits[left + 1]) {
+            left--;
         }
-      
-        if (i < 0) {
+        if (left < 0) {
             return -1;
         }
-        int j = length - 1;
-        while (digits[i] >= digits[j]) {
-            j--;
+        int right = len - 1;
+        while (digits[left] >= digits[right]) {
+            right--;
         }
-        swap(digits, i, j);
-        reverse(digits, i + 1, length - 1);
+        swap(digits, left, right);
+        reverse(digits, left + 1, len - 1);
         long result = Long.parseLong(new String(digits));
         return result > Integer.MAX_VALUE ? -1 : (int) result;
     }
-
-    private void swap(char[] array, int i, int j) {
-        char temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+    public void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
-    private void reverse(char[] array, int start, int end) {
+     public void reverse(char[] array, int start, int end) {
         while (start < end) {
             swap(array, start, end);
             start++;
