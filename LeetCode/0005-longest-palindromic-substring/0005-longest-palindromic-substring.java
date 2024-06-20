@@ -1,47 +1,29 @@
 class Solution {
     public String longestPalindrome(String s) {
         String answer = s.substring(0, 1);
-        String temp = "";
-        int idx = 1; 
-        int l = 0;
-        int r = 0;
-        while(idx < s.length()){
-            if(s.charAt(idx) == s.charAt(idx-1)){
-                temp = s.substring(idx-1, idx+1);
-                l = idx - 2;
-                r = idx + 1;
-                while(l >= 0 && r < s.length()){
-                    if(s.charAt(l) == s.charAt(r)){
-                        temp = s.substring(l, r+1);
-                        l--;
-                        r++;
-                    } 
-                    else {
-                        break;
-                    }
-                }
-                if(temp.length() > answer.length()) {
-                    answer = temp;
-                }
+        for(int i = 1; i < s.length(); i++) {
+            String temp = "";
+            int l = i-1;
+            int r = i;
+            while(l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+                temp = s.substring(l, r+1);
+                l--;
+                r++;
             }
-            temp = "";
-            l = idx - 1;
-            r = idx + 1;
-            while(l >= 0 && r < s.length()){
-                if(s.charAt(l) == s.charAt(r)){
-                    temp = s.substring(l, r+1);
-                    l--;
-                    r++;
-                } 
-                else {
-                    break;
-                }
-            }
-            if(temp.length() > answer.length()) {
+            if(answer.length() < temp.length()) {
                 answer = temp;
             }
-            idx++;
             temp = "";
+            l = i-1;
+            r = i+1;
+            while(l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+                temp = s.substring(l, r+1);
+                l--;
+                r++;
+            }
+            if(answer.length() < temp.length()) {
+                answer = temp;
+            }
         }
         return answer;
     }
