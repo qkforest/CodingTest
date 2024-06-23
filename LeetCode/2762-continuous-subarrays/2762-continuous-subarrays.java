@@ -6,7 +6,7 @@ class Solution {
         TreeMap<Integer, Integer> map = new TreeMap<>();
         for (int j = 0; j < len; j++) {
             map.merge(nums[j], 1, Integer::sum);
-            while (map.lastEntry().getKey() - map.firstEntry().getKey() > 2) {
+            while (map.lastKey() - map.firstKey()  > 2) {
                 map.merge(nums[i], -1, Integer::sum);
                 if (map.get(nums[i]) == 0) {
                     map.remove(nums[i]);
