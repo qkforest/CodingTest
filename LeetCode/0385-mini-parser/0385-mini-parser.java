@@ -31,19 +31,18 @@ class Solution {
         if(s.charAt(0) != '[') {
             return new NestedInteger(Integer.parseInt(s));
         }
-        Deque<NestedInteger> stack = new ArrayDeque<>();
         StringBuilder num = new StringBuilder();
-        for(int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if(c == '['){
+        Deque<NestedInteger> stack = new ArrayDeque<>();
+        for(char c : s.toCharArray()) {
+            if(c == '[') {
                 stack.push(new NestedInteger());
             }
-            else if(c == ',' || c == ']') {
-                if(num.length() != 0){
+            else if(c == ',' || c == ']'){
+                if(num.length() > 0) {
                     stack.peek().add(new NestedInteger(Integer.parseInt(num.toString())));
-                    num.setLength(0); 
+                    num.setLength(0);
                 }
-                if (c == ']' && stack.size() > 1) {
+                if(stack.size() > 1 && c == ']') {
                     NestedInteger nestedInteger = stack.pop();
                     stack.peek().add(nestedInteger);
                 }
