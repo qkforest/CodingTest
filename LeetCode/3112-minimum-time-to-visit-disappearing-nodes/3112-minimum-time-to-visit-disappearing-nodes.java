@@ -3,8 +3,8 @@ class Solution {
         int[] answer = new int[n];
         List<Node>[] graph = new ArrayList[n];
         boolean[] visited = new boolean[n];
-		int INF = Integer.MAX_VALUE;
-        for(int i = 0; i < n; i++)  {
+        int INF = Integer.MAX_VALUE;
+        for(int i = 0; i < n; i++) {
             graph[i] = new ArrayList<>();
         }
         for(int[] edge : edges) {
@@ -14,21 +14,20 @@ class Solution {
         Arrays.fill(answer, INF);
         answer[0] = 0;
         PriorityQueue<Node> pq = new PriorityQueue<>();
-		pq.offer(new Node(0, 0));
+        pq.offer(new Node(0, 0));
         while(!pq.isEmpty()) {
-			int now = pq.poll().idx;
-			if(!visited[now]) {
+            int now = pq.poll().idx;
+            if(!visited[now]) {
                 visited[now] = true;
                 for(Node next : graph[now]) {
-                    if(answer[next.idx] > answer[now] + next.time) {
-                        if(answer[now] + next.time < disappear[next.idx]) {
-                            answer[next.idx] = answer[now] + next.time;
-                            pq.offer(new Node(next.idx, answer[next.idx]));
-                        }
+                    int time = answer[now] + next.time;
+                    if(time < answer[next.idx] && time < disappear[next.idx]) {
+                        answer[next.idx] = time;
+                        pq.offer(new Node(next.idx, time));
                     }
                 }
             }
-		}
+        }
         for(int i = 1; i < n; i++) {
             if(answer[i] >= disappear[i]) {
                 answer[i] = -1;
