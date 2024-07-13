@@ -8,6 +8,9 @@ class Main {
 				System.out.println(i);
 				n /= i;
 			}
+			if(i > n) {
+				break;
+			}
 		}
 	}
 }
