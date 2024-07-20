@@ -6,31 +6,31 @@ public class Main {
 		String str = br.readLine();
 		StringBuilder sb = new StringBuilder();
 		int idx = 0;
-		String temp = "";
+		StringBuilder temp  = new StringBuilder();
 		while(idx < str.length()) {
 			if(str.charAt(idx) == '<') {
 				if(temp.length() > 0) {
-					sb.append(new StringBuilder(temp).reverse());
-					temp = "";
+					sb.append(temp.reverse());
+					temp.setLength(0);
 				}
 				while(str.charAt(idx) != '>') {
-					temp += str.charAt(idx);
+					temp.append(str.charAt(idx));
 					idx++;
 				}
 				sb.append(temp).append(">");
-				temp = "";
+				temp.setLength(0);
 			}
 			else if(str.charAt(idx) == ' ') {
-				sb.append(new StringBuilder(temp).reverse()).append(" ");
-				temp = "";
+				sb.append(temp.reverse()).append(" ");
+				temp.setLength(0);
 			}
 			else {
-				temp += str.charAt(idx);
+				temp.append(str.charAt(idx));
 			}
 			idx++;
 		}
 		if(temp.length() > 0) {
-			sb.append(new StringBuilder(temp).reverse());
+			sb.append(temp.reverse());
 		}
 		System.out.print(sb);
 	}
