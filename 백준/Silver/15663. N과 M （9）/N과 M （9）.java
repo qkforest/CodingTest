@@ -6,7 +6,8 @@ class Main {
 	public static int[] arr;
 	public static int[] temp;
 	public static boolean[] visited;
-	public static List<String> list;
+	public static Set<String> set;
+	public static StringBuilder answer; 
 	public static void dfs(int level) {
 		if(level == M) {
 			StringBuilder sb = new StringBuilder();
@@ -14,8 +15,9 @@ class Main {
 				sb.append(num).append(" ");
 			}
 			String s = sb.deleteCharAt(sb.length()-1).toString();
-			if(!list.contains(s)) {
-				list.add(s);
+			if(!set.contains(s)) {
+				set.add(s);
+				answer.append(s).append("\n");
 			}
 			return;
 		}
@@ -37,12 +39,9 @@ class Main {
 		Arrays.sort(arr);
 		visited = new boolean[N];
 		temp = new int[M];
-		list = new ArrayList<>();
+		set = new HashSet<>();
+		answer = new StringBuilder();
 		dfs(0);
-		StringBuilder sb = new StringBuilder();
-		for(String str : list) {
-			sb.append(str).append("\n");
-		}
-		System.out.print(sb);
+		System.out.print(answer);
  	}
 }
