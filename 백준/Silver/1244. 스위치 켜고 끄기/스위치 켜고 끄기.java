@@ -13,10 +13,10 @@ class Main {
 			String[] s = br.readLine().split(" ");
 			switch(s[0]) {
 			case "1" :
-				male(Integer.parseInt(s[1]));
+				male(Integer.parseInt(s[1])); // 남학생
 				break;
 			case "2" :
-				female(Integer.parseInt(s[1]));
+				female(Integer.parseInt(s[1])); // 여학생
 			}
 		}
 		StringBuilder sb = new StringBuilder();
