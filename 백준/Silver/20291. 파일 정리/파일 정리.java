@@ -6,16 +6,15 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
 		
-		Map<String, Integer> map = new TreeMap<>(); // 이름 사전 순 저장
+		Map<String, Integer> map = new TreeMap<>();
 		
 		for(int i = 0; i < N; i++) {
-			String[] s = br.readLine().split("\\.");
-			map.merge(s[1], 1, Integer::sum);
-		}
+	        String file = br.readLine(); 
+	        map.merge(file.substring(file.lastIndexOf(".")+1, file.length()), 1, Integer::sum);
+         }
 		
 		StringBuilder sb = new StringBuilder();
 		
-		// 남은 인원 출력
 		for(String name : map.keySet()) {
 			sb.append(name).append(" ").append(map.get(name)).append("\n");
 		}
