@@ -15,17 +15,11 @@ class Main {
 		int min = 0;
 		while(count > 0) {
 			int max = pq.poll();
-			if(max < centi) {
+			if(max < centi || max <= 1) {
 				pq.offer(max);
 				break;
 			}
-			if(max > 1) {
-				max /= 2; 
-			}
-            else {
-                pq.offer(max);
-                break;
-            }
+			max /= 2; 
 			pq.offer(max);
 			count--;
 			min++;
