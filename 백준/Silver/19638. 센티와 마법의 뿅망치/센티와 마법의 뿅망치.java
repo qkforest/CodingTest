@@ -22,6 +22,10 @@ class Main {
 			if(max > 1) {
 				max /= 2; 
 			}
+            else {
+                pq.offer(max);
+                break;
+            }
 			pq.offer(max);
 			count--;
 			min++;
