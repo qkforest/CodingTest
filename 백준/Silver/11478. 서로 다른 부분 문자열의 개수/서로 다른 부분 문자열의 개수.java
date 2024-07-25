@@ -1,14 +1,14 @@
 import java.io.*;
 import java.util.*;
-public class Main {
-	public static Set<String> set;
-	public static void main(String[] args) throws IOException {
+
+class Main {
+	public static void main(String args[]) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String s = br.readLine();
-		set = new HashSet<>();
-		for(int i = 0; i < s.length(); i++) {
-			for(int j = 1; j <= s.length()- i; j++) {
-				set.add(s.substring(i, i+j));
+		Set<String> set = new HashSet<>();
+		StringBuilder sb = new StringBuilder(br.readLine());
+		for(int i = 0; i < sb.length(); i++) {
+			for(int j = i+1; j <= sb.length(); j++) {
+				set.add(sb.substring(i, j));
 			}
 		}
 		System.out.print(set.size());
