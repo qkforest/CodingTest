@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.*;
-
 class Main {
 	public static String[][] board;
 	public static int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
@@ -8,7 +7,7 @@ class Main {
 	public static void main(String args[]) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		board = new String[5][5];
-		set = new TreeSet<>();
+		set = new HashSet<>();
 		for(int i = 0; i < 5; i++) {
 			board[i] = br.readLine().split(" ");
 		}
@@ -37,7 +36,6 @@ class Main {
 			}
 		}
 	}
-		
 	static class Square {
 		int y;
 		int x;
