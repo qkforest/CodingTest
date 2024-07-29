@@ -1,46 +1,47 @@
 import java.io.*;
-class Main{
-	public static int[] parents;
-	public static void main(String args[]) throws IOException{
+import java.util.*;
+
+class Main {
+	public static int N , M, answer;
+	public static boolean[] visited;
+	public static List<Integer>[] connected;
+	public static void main(String args[]) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(br.readLine());
-		int m = Integer.parseInt(br.readLine());
-		parents = new int[n+1];
-		for(int i = 1; i <= n; i++) {
-			parents[i] = i;
+		N = Integer.parseInt(br.readLine());
+		M = Integer.parseInt( br.readLine());
+		visited = new boolean[N+1];
+		connected = new ArrayList[N+1];
+		for(int i = 0; i <= N; i++) {
+			connected[i] = new ArrayList<>();
 		}
-		for(int i = 0; i < m; i++) {
+		
+		for(int i = 0; i < M; i++) {
 			String[] s = br.readLine().split(" ");
-			union(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
+			int u = Integer.parseInt(s[0]);
+			int v = Integer.parseInt(s[1]);
+			connected[u].add(v);
+			connected[v].add(u);
 		}
-		for(int i = 1; i <= n; i++) {
-			find(i);
-		}
-		int answer = 0;
-		for(int i = 2; i <= n; i++) {
-			if(parents[i] == parents[1]) {
+		
+		answer = 0;
+		
+		bfs();
+		
+		System.out.print(answer-1);
+	}
+	
+	public static void bfs() {
+		Queue<Integer> q = new LinkedList<>();
+		q.offer(1);
+		while(!q.isEmpty()) {
+			int now = q.poll();
+			if(!visited[now]) {
+				visited[now] = true;
 				answer++;
+				for(int next : connected[now]) {
+					q.offer(next);
+				}
 			}
 		}
-		System.out.println(answer);
-	}
-	public static void union(int a, int b) {
-		int aParent = find(a);
-		int bParent = find(b);
-		if(aParent == bParent) {
-			return;
-		}
-		if(aParent < bParent) {
-			parents[bParent] = aParent;
-		}
-		else {
-			parents[aParent] = bParent;
-		}
-	}
-	public static int find(int num) {
-		if(parents[num] == num) {
-			return num;
-		}
-		return parents[num] = find(parents[num]);
 	}
 }
