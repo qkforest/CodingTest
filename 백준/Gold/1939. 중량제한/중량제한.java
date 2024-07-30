@@ -45,7 +45,7 @@ class Main {
 				}
 			}
 		}
-		return 0;
+		return weight;
 	}
 	public static class Bridge implements Comparable<Bridge> {
 		int island;
@@ -59,10 +59,6 @@ class Main {
 		@Override
 		public int compareTo(Bridge other) {
 			return Integer.compare(other.weight, this.weight);
-		}
-		
-		public String toString() {
-			return this.island + " " + this.weight;
 		}
 	}
 }
