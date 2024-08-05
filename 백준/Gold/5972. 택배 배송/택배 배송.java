@@ -9,7 +9,7 @@ class Main {
 		int M = Integer.parseInt(s[1]);
 		
 		boolean[] visited = new boolean[N+1];
-		List<int[]>[] costs = new ArrayList[N+1];
+		List<Hut>[] costs = new ArrayList[N+1];
 		
 		for(int i = 1; i <= N; i++) {
 			costs[i] = new ArrayList<>();
@@ -21,25 +21,40 @@ class Main {
 			int A = Integer.parseInt(s[0]);
 			int B = Integer.parseInt(s[1]);
 			int C = Integer.parseInt(s[2]);
-			costs[A].add(new int[] {B, C});
-			costs[B].add(new int[] {A, C});
+			costs[A].add(new Hut(B, C));
+			costs[B].add(new Hut(A, C));
 		}
 		
-		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
-		pq.offer(new int[] {1 , 0});
+		PriorityQueue<Hut> pq = new PriorityQueue<>();
+		pq.offer(new Hut(1 , 0));
 		
 		while(!pq.isEmpty()) {
-			int[] now = pq.poll();
-			if(now[0] == N) {
-				System.out.print(now[1]);
+			Hut now = pq.poll();
+			if(now.n == N) {
+				System.out.print(now.cost);
 				break;
 			}
-			if(!visited[now[0]]) {
-				visited[now[0]] = true;
-				for(int[] next : costs[now[0]]) {
-					pq.offer(new int[] {next[0], next[1] + now[1]});
+			if(!visited[now.n]) {
+				visited[now.n] = true;
+				for(Hut next : costs[now.n]) {
+					pq.offer(new Hut(next.n, next.cost + now.cost));
 				}
 			}
+		}
+	}
+	
+	public static class Hut implements Comparable<Hut> {
+		int n;
+		int cost;
+		
+		public Hut(int n, int cost) {
+			this.n = n;
+			this.cost = cost;
+		}
+		
+		@Override
+		public int compareTo(Hut other) {
+			return this.cost - other.cost;
 		}
 	}
 }
