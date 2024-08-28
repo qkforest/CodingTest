@@ -11,8 +11,12 @@ class Main {
 			arr[c-'a']++;
 		}
 		
+		StringBuilder sb = new StringBuilder();
+		
 		for(int n : arr) {
-			System.out.print(n + " ");
+			sb.append(n).append(" ");
 		}
+		
+		System.out.print(sb);
 	}
 }
