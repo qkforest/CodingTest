@@ -5,23 +5,31 @@ class Main {
 	public static void main(String args[]) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
-		int[][] lines = new int[N][2];
+		TreeMap<Integer, Integer> map = new TreeMap<>(Collections.reverseOrder());
 		for(int i = 0; i < N; i++) {
-			lines[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-		}
-		Arrays.sort(lines, (o1, o2) -> o1[1] == o2[1] ? o1[0] - o2[0] : o2[1] - o1[1]);
-		int answer = lines[0][1] - lines[0][0];
-		int pre = lines[0][0];
-		for(int i = 1; i < N; i++) {
-			if(lines[i][0] >= pre) {
+			String[] str = br.readLine().split(" ");
+			int e = Integer.parseInt(str[1]);
+			int s = Integer.parseInt(str[0]);
+			if(!map.containsKey(e)) {
+				map.put(e, s);
+			}
+			else if(map.get(e) > s) {
+				map.put(e, s);
+			}
+ 		}
+		int pre = Integer.MAX_VALUE;
+		int answer = 0;
+		for(int k : map.keySet()) {
+			int s = map.get(k);
+			if(s >= pre) {
 				continue;
 			} else {
-				if(lines[i][1] > pre) {
-					answer += pre - lines[i][0]; 
+				if(k > pre) {
+					answer += pre - s; 
 				} else {
-					answer += lines[i][1] - lines[i][0]; 
+					answer += k - s; 
 				}
-				pre = lines[i][0];
+				pre = s;
 			}
 		}
 		System.out.print(answer);
