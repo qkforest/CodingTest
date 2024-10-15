@@ -6,8 +6,9 @@ class Main {
 	public static int R, C, T;
 	public static int[] air;
 	public static int[][] board;
-	public static int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-	public static Queue<Dust> q;
+	public static int[] updr = {-1, 0, 1, 0};
+	public static int[] updc = {0, 1, 0, -1};
+	public static int[] downdr = {1, 0, -1, 0};
 	public static void main(String args[]) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String[] s = br.readLine().split(" ");
@@ -17,7 +18,7 @@ class Main {
 		board = new int[R][C];
 		air = new int[2];
 		Arrays.fill(air, -1);
-		q = new LinkedList<>();
+		
 		for(int i = 0; i < R; i++) {
 			s = br.readLine().split(" ");
 			for(int j = 0; j < C; j++) {
@@ -30,161 +31,79 @@ class Main {
 						air[1] = i;
 					}
 				}
-				else if(v > 0) {
-					q.offer(new Dust(i, j));
-				}
 			}
 		}
 		for(int i = 0; i < T; i++) {
-			diffusion();
+			diff();
+			rotate();
 		}
 		long answer = 0;
-		while(!q.isEmpty()) {
-			Dust now = q.poll();
-			answer += board[now.y][now.x];
+		for(int r = 0; r < R; r++) {
+			for(int c = 0; c < C; c++) {
+				if(board[r][c] > 0) {
+					answer += board[r][c];
+				}
+			}
 		}
 		System.out.print(answer);
 	}
-	
-	public static void diffusion() {
-		Map<Dust, Integer> map = new HashMap<>();
-		while(!q.isEmpty()) {
-			Dust now = q.poll();
-			int amount = board[now.y][now.x];
-			int diff_amount = (int) Math.floor(amount/5);
-			int count = 0;
-			for(int[] d : directions) {
-				int dy = now.y + d[0];
-				int dx = now.x + d[1];
-				if(dy >= 0 && dy < R && dx >= 0 && dx < C && board[dy][dx] != -1) {
-					count++;
-					Dust next = new Dust(dy ,dx);
-					if(map.containsKey(next)) {
-						int value = map.get(next) + diff_amount;
-						map.put(next, value);
-					} else {
-						map.put(next, diff_amount);
+	public static void diff() {
+		int[][] map = new int[R][C];
+		for(int r = 0; r < R; r++) {
+			for(int c = 0; c < C; c++) {
+				if(board[r][c] >= 5) {
+					int a = (int) Math.floor(board[r][c] / 5);
+					int count = 0;
+					for(int i = 0; i < 4; i++) {
+						int dr = r + updr[i];
+						int dc = c + updc[i];
+						if(dr >= 0 && dr < R && dc >= 0 && dc < C && board[dr][dc] != -1) {
+							map[dr][dc] += a;
+							count++;
+						}
 					}
+					map[r][c] += a * count * (-1);
 				}
 			}
-			if(map.containsKey(now)) {
-				int value = map.get(now) + (diff_amount * count * (-1));
-				map.put(now, value);
+		}
+		for(int r = 0; r < R; r++) {
+			for(int c = 0; c < C; c++) {
+				board[r][c] += map[r][c];
+			}
+		}
+	}
+	public static void rotate() {
+		int nowr = air[0] - 1;
+		int nowc = 0;
+		board[air[0]][0] = 0;
+		int dir = 0;
+		while(dir < 4) {
+			int nextr = nowr + updr[dir];
+			int nextc = nowc + updc[dir];
+			if(nextr >= 0 && nextr <= air[0]  && nextc >= 0 && nextc < C) {
+				board[nowr][nowc] = board[nextr][nextc];
+				nowr = nextr;
+				nowc = nextc;
 			} else {
-				map.put(now, diff_amount * count * (-1));
+				dir++;
 			}
 		}
-		for(Dust now : map.keySet()) {
-			int amount = map.get(now);
-			board[now.y][now.x] += amount;
-		}
-		top();
-		bottom();
-		for(int i = 0; i < R; i++) {
-			for(int j = 0; j < C; j++) {
-				if(board[i][j] > 0) {
-					q.offer(new Dust(i, j));
-				}
+		board[air[0]][0] = -1;
+		board[air[1]][0] = 0;
+		dir = 0;
+		nowr = air[1] + 1;
+		nowc = 0;
+		while(dir < 4) {
+			int nextr = nowr + downdr[dir];
+			int nextc = nowc + updc[dir];
+			if(nextr >= air[1] && nextr < R && nextc >= 0 && nextc < C) {
+				board[nowr][nowc] = board[nextr][nextc];
+				nowr = nextr;
+				nowc = nextc;
+			} else {
+				dir++;
 			}
 		}
-	}
-	
-	public static void top() {
-		Queue<Integer> next = new LinkedList<>();
-		next.offer(0);
-		int y = air[0];
-		int x = 1;
-		while(y != air[0] || x != 0) {
-			next.offer(board[y][x]);
-			board[y][x] = next.poll();
-			if(y == 0) {
-				if(x > 0) {
-					x--;
-				} else {
-					y++;
-				}
-			}
-			else if(y == air[0]) {
-				if(x < C-1) {
-					x++;
-				} else {
-					y--;
-				}
-			}
-			else if(x == C-1) {
-				if(y > 0) {
-					y--;
-				} else {
-					x--;
-				}
-			} 
-			else {
-				y++;
-			}
-		}
-	}
-	
-	public static void bottom() {
-		Queue<Integer> next = new LinkedList<>();
-		next.offer(0);
-		int y = air[1];
-		int x = 1;
-		while(y != air[1] || x != 0) {
-			next.offer(board[y][x]);
-			board[y][x] = next.poll();
-			if(y == R-1) {
-				if(x > 0) {
-					x--;
-				} else {
-					y--;
-				}
-			}
-			else if(y == air[1]) {
-				if(x < C-1) {
-					x++;
-				} else {
-					y++;
-				}
-			}
-			else if(x == C-1) {
-				if(y < R-1) {
-					y++;
-				} else {
-					x--;
-				}
-			} 
-			else {
-				y--;
-			}
-		}
-	}
-	
-	public static class Dust {
-		int y;
-		int x;
-		
-		public Dust(int y, int x) {
-			this.y = y;
-			this.x = x;
-		}
-		
-		@Override
-		public boolean equals(Object o) {
-			if(this == o) {
-				return true;
-			}
-			
-			if(o == null || getClass() != o.getClass()) {
-				return false;
-			}
-			
-			Dust other = (Dust) o;
-			return y == other.y && x == other.x;
-		}
-		
-		@Override
-		public int hashCode() {
-			return Objects.hash(y, x);
-		}
+		board[air[1]][0] = -1;
 	}
 }
