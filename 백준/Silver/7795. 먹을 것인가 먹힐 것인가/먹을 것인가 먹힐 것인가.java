@@ -23,11 +23,19 @@ class Main {
 			int answer = 0;
 			Arrays.sort(B);
 			for(int num : A) {
-				int idx = 0;
-				while(idx < M && B[idx] < num) {
-					idx++;
+				int left = 0;
+				int right = M-1;
+				int idx = -1;
+				while(left <= right) {
+					int mid = (left + right) / 2;
+					if(B[mid] >= num) {
+						right = mid - 1;
+					} else {
+						idx = mid;
+						left = mid + 1;
+					}
 				}
-				answer += idx;
+				answer += (idx+1);
 			}
 			sb.append(answer).append("\n");
 		}
