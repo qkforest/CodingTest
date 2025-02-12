@@ -7,20 +7,19 @@ class Main {
 		int N = Integer.parseInt(s[0]);
 		int M = Integer.parseInt(s[1]);
 		Set<Integer> A = new HashSet<>();
-		Set<Integer> B = new HashSet<>();
 		s = br.readLine().split(" ");
 		for(int i = 0; i < N; i++) {
 			A.add(Integer.parseInt(s[i]));
 		}
+		int a = N;
+		int b = M;
 		s = br.readLine().split(" ");
 		for(int i = 0; i < M; i++) {
-			int num = Integer.parseInt(s[i]);
-			if(A.contains(num)) {
-				A.remove(num);
-			} else {
-				B.add(num);
+			if(A.contains(Integer.parseInt(s[i]))) {
+				a--;
+				b--;
 			}
 		}
-		System.out.print(A.size()+B.size());
+		System.out.print(a+b);
 	}
 }
