@@ -4,9 +4,10 @@ class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		String str = br.readLine();
+		int len = str.length();
 		int N = Integer.parseInt(br.readLine());
-		int[][] arr = new int[2001][26];
-		for(int i = 1; i <= str.length(); i++) {
+		int[][] arr = new int[len+1][26];
+		for(int i = 1; i <= len; i++) {
 			for(int j = 0; j < 26; j++) {
 				arr[i][j] = arr[i-1][j];
 			}
