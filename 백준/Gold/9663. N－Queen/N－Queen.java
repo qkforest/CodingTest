@@ -1,12 +1,11 @@
 import java.io.*;
 class Main {
 	public static int N, answer;
-	public static boolean[][] board;
-	public static int[][] directions = {{-1, -1}, {1, -1}, {0, -1}};
+	public static int[] board;
 	public static void main(String args[]) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
-		board = new boolean[N][N];
+		board = new int[N];
 		answer = 0;
 		queen(0);
 		System.out.print(answer);
@@ -16,24 +15,28 @@ class Main {
 			answer++;
 			return;
 		}
-		for(int i = 0; i < N; i++) {
+		for(int i = 1; i <= N; i++) {
 			if(check(i, level)) {
-				board[i][level] = true;
+				board[level] = i;
 				queen(level+1);
-				board[i][level] = false;
+				board[level] = 0;
 			}
 		}
 	}
 	public static boolean check(int y, int x) {
-		for(int[] d : directions) {
-			int dy = y + d[0];
-			int dx = x + d[1];
-			while(dy >= 0 && dy < N && dx >= 0) {
-				if(board[dy][dx]) {
-					return false;
-				}
-				dy += d[0];
-				dx += d[1];
+		for(int i = 0; i < x; i++) {
+			if(board[i] == y) {
+				return false;
+			}
+		}
+		for(int i = x-1, j = y-1; i >= 0 && j >= 1; i--, j--) {
+			if(board[i] == j) {
+				return false;
+			}
+		}
+		for(int i = x-1, j = y+1; i >= 0 && j <= N; i--, j++) {
+			if(board[i] == j) {
+				return false;
 			}
 		}
 		return true;
