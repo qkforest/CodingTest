@@ -4,9 +4,9 @@ class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		String[] s = br.readLine().split(" ");
-		int A = Integer.parseInt(s[0]);
-		int B = Integer.parseInt(s[1]);
-		sb.append(A*A - B*B);
+		long A = Long.parseLong(s[0]);
+		long B = Long.parseLong(s[1]);
+		sb.append(A*A - B*B);	
         System.out.print(sb);
 	}
 }
