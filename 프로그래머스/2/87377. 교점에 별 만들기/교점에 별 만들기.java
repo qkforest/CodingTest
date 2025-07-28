@@ -1,44 +1,78 @@
 import java.util.*;
 class Solution {
-    public Set<long[]> stars;
-    public int[] lines;
-    long startX = Long.MAX_VALUE, startY = Long.MAX_VALUE, endX = Long.MIN_VALUE, endY = Long.MIN_VALUE;
-    public String[] solution(int[][] line) {
-        stars = new HashSet<>();
-        lines = new int[2];
-        dfs(0, 0 , line);
-        char[][] ans = new char[(int)(endY-startY+1)][(int)(endX-startX+1)];
-        for(int i = 0; i < endY-startY+1; i++)
-            Arrays.fill(ans[i], '.');
-        for(long[] s : stars)
-            ans[(int)(s[1]-startY)][(int)(s[0]-startX)] = '*';
-        String[] answer = new String[(int)(endY-startY+1)];
-        for(int i = 0 ; i < answer.length; i++)
-            answer[i] = new String(ans[answer.length-1-i]);
-        return answer;
+    private static class Point {
+        public final long x, y;
+        
+        private Point(long x, long y) {
+            this.x = x;
+            this.y = y;
+        }
     }
-    public void dfs(int s, int level, int[][] line){
-        if(level == 2){
-            long A = line[lines[0]][0];
-            long B = line[lines[0]][1];
-            long E = line[lines[0]][2];
-            long C = line[lines[1]][0];
-            long D = line[lines[1]][1];
-            long F = line[lines[1]][2];
-            double x = (B*F-E*D)/(double)(A*D-B*C);
-            double y = (E*C-A*F)/(double)(A*D-B*C);
-            if(A*D - B*C != 0 && (x == (long)x && y == (long)y)){
-                startX = Math.min(startX, (long)x);
-                startY = Math.min(startY, (long)y);
-                endX = Math.max(endX, (long)x);
-                endY = Math.max(endY, (long)y);
-                stars.add(new long[]{(long)x, (long)y});
-            }
-        }else{
-            for(int i = s; i < line.length; i++){
-                lines[level] = i;
-                dfs(s+1, level+1, line);
+    
+    private Point intersection(long a1, long b1, long c1, long a2, long b2, long c2) {
+        double x = (double) (b1 * c2 - c1 * b2) / (a1 * b2 - b1 * a2);
+        double y = (double) (c1 * a2 - a1 * c2) / (a1 * b2 - b1 * a2);
+        
+        if(x % 1 != 0 || y % 1 != 0) {
+            return null;
+        }
+        
+        return new Point((long) x, (long) y);
+    }
+    private Point getMinimumPoint(List<Point> points) {
+        long x = Long.MAX_VALUE;
+        long y = Long.MAX_VALUE;
+        
+        for(Point p : points) {
+            x = Math.min(x, p.x);
+            y = Math.min(y, p.y);
+        }
+        return new Point(x, y);
+    }
+    
+    private Point getMaximumPoint(List<Point> points) {
+        long x = Long.MIN_VALUE;
+        long y = Long.MIN_VALUE;
+        
+        for(Point p : points) {
+            x = Math.max(x, p.x);
+            y = Math.max(y, p.y);
+        }
+        return new Point(x, y);
+    }
+    
+    public String[] solution(int[][] line) {
+        List<Point> points = new ArrayList<>();
+        
+        for(int i = 0; i < line.length; i++) {
+            for(int j = i+1; j < line.length; j++) {
+                Point intersection = intersection(line[i][0], line[i][1], line[i][2], line[j][0], line[j][1], line[j][2]);
+                if(intersection != null) {
+                    points.add(intersection);
+                }
             }
         }
+        Point min = getMinimumPoint(points);
+        Point max = getMaximumPoint(points);
+
+        int c = (int) (max.x - min.x + 1);
+        int r = (int) (max.y - min.y + 1);
+
+        char[][] arr = new char[r][c];
+        
+        for(int i = 0; i < r; i++) {
+            Arrays.fill(arr[i], '.');
+        }
+
+        for(Point p : points) {
+            arr[(int) (max.y - p.y)][(int) (p.x - min.x)] = '*';
+        }
+        
+        String[] answer = new String[r];
+        for(int i = 0; i < r; i++) {
+            answer[i] = new String(arr[i]);
+        }
+            
+        return answer;
     }
 }
