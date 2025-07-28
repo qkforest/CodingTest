@@ -1,49 +1,34 @@
-import java.util.*;
 class Solution {
+    private static final int[] dy = {1, 0, -1};
+    private static final int[] dx = {0, 1, -1};
+    
     public int[] solution(int n) {
-        int len = n*(n+1)/2;
-        int[] answer = new int[len];
-        int i = 0, idx = 0, flag = 1, plus = 0, count = 0;
-        while(i < len){
-            int limit = n > 1 ? n-1 : 1;
-            if(flag == 1){
-                if(count == limit) {
-                    flag++;
-                    count = 0;
-                }else{
-                    i++;
-                    answer[idx] = i;
-                    plus++;
-                    idx += plus;
-                    count++;
+        int[][] arr = new int[n][n];
+        int v = 1;
+        int d = 0;
+        int y = 0;
+        int x = 0;
+        
+        while(true) {
+            arr[y][x] = v++;
+            int ny = y + dy[d];
+            int nx = x + dx[d];
+            if(ny == n || ny == -1 || nx == n || ny == -1 || arr[ny][nx] != 0) {
+                d = (d+1) % 3;
+                ny = y + dy[d];
+                nx = x + dx[d];
+                if(ny == n || ny == -1 || nx == n || ny == -1 || arr[ny][nx] != 0) {
+                    break;
                 }
             }
-            else if(flag == 2){
-                if(count == limit) {
-                    flag++;
-                    count = 0;
-                    plus += 1;
-                }else {
-                    i++;
-                    answer[idx] = i;
-                    idx++;
-                    count++;
-                }
-            } else {
-                if(count == limit) {
-                    flag = 1;
-                    count = 0;
-                    idx += plus;
-                    n -= 3;
-                } else{
-                    i++;
-                    answer[idx] = i;
-                    count++;
-                    if(count != n-1){
-                        idx -= (plus);
-                        plus--;
-                    }
-                }
+            y = ny;
+            x = nx;
+        }
+        int[] answer = new int[v-1];
+        int idx = 0;
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < i+1; j++) {
+                answer[idx++] = arr[i][j];
             }
         }
         return answer;
