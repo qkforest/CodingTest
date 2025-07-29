@@ -1,21 +1,20 @@
 class Solution {
     public String solution(String s) {
-        String answer = "";
+        String[] arr = s.split(" ");
+        StringBuilder answer = new StringBuilder();
         int idx = 0;
-        for(char c: s.toCharArray()){
-            if(c != ' '){
-                if(idx % 2 == 0){
-                    answer += Character.toUpperCase(c);
-                    idx++;
-                } else {
-                    answer += Character.toLowerCase(c);
-                    idx++;
-                }
+        for(int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) == ' ') {
+                idx = 0; 
+                answer.append(' ');
+                continue;
+            }
+            if((idx++) % 2 == 0) {
+                answer.append(Character.toUpperCase(s.charAt(i)));
             } else {
-                answer += ' ';
-                idx = 0;
+               answer.append(Character.toLowerCase(s.charAt(i)));
             }
         }
-        return answer;
+        return answer.toString();
     }
 }
