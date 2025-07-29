@@ -1,6 +1,5 @@
 class Solution {
     public String solution(String s) {
-        String[] arr = s.split(" ");
         StringBuilder answer = new StringBuilder();
         int idx = 0;
         for(int i = 0; i < s.length(); i++) {
