@@ -1,16 +1,16 @@
 class Solution {
     public int[] solution(String s) {
         int[] answer = new int[2];
-        int count = 0;
-        while(!s.equals("1")){
-            answer[0] += 1;
-            count = 0;
-            for(int i = 0; i < s.length(); i++){
-                if(s.charAt(i) == '1')
+        while(!s.equals("1")) {
+            answer[0]++;
+            int count = 0;
+            for(char c : s.toCharArray()) {
+                if(c == '0') {
                     count++;
+                }
             }
-            answer[1] += s.length() - count;
-            s = Integer.toBinaryString(count);
+            answer[1] += count;
+            s = Integer.toString(s.length() - count, 2);
         }
         return answer;
     }
