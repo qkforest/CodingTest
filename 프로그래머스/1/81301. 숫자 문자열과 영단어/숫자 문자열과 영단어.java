@@ -1,27 +1,25 @@
 import java.util.*;
 class Solution {
-    public boolean isNumber(char c){
-        try{
-            Integer.parseInt(String.valueOf(c));
-            return true;
-        } catch(NumberFormatException e){
-            return false;
-        }
-    }
+    private static final Map<String, Integer> numbers = Map.of("zero" , 0, "one", 1, "two", 2, "three", 3, "four", 4, "five", 5, "six", 6, "seven", 7, "eight", 8, "nine", 9);
     public int solution(String s) {
-        String[] word = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-        String answer = "";
-        String temp = "";
-        for(char c : s.toCharArray()){
-            if(isNumber(c))
-                answer += c - '0';
-            else
-                temp += c;
-            if(Arrays.asList(word).contains(temp)){
-                answer += Arrays.asList(word).indexOf(temp);
-                temp = "";
+        StringBuilder answer = new StringBuilder();
+        int i = 0;
+        int len = 3;
+        while(i < s.length()) {
+            if(s.charAt(i) >= '0' && s.charAt(i) <= '9') {
+                answer.append(s.charAt(i));
+                i++;
+            }
+            else {
+                if(numbers.containsKey(s.substring(i, i+len))) {
+                    answer.append(numbers.get(s.substring(i, i+len)));
+                    i += len;
+                    len = 3;
+                } else {
+                    len++;
+                }
             }
         }
-        return Integer.parseInt(answer);
+        return Integer.parseInt(answer.toString());
     }
 }
