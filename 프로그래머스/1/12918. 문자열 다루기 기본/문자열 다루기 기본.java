@@ -1,23 +1,16 @@
 class Solution {
-    public boolean isNumber(String s){
-        try{
-            Integer.parseInt(s);
-            return true;
-        } catch(NumberFormatException e){
-            return false;
-        }
-    }
     public boolean solution(String s) {
         boolean answer = true;
-        if(s.length() == 4 || s.length() == 6){
-            for(char c: s.toCharArray()){
-                if(!isNumber(String.valueOf(c))){
+        if(s.length() != 4 && s.length() != 6) {
+            answer = false;
+        } else {
+            for(char c : s.toCharArray()) {
+                if(c < '0' || c > '9') {
                     answer = false;
                     break;
                 }
             }
-        } else
-            answer = false;
+        }
         return answer;
     }
 }
