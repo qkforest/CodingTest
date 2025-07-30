@@ -1,41 +1,38 @@
-import java.util.regex.Pattern;
 class Solution {
     public String solution(String new_id) {
-        String answer = "";
-        for(char c : new_id.toCharArray()){
-            if(Pattern.matches("^[a-z|A-Z]*$", String.valueOf(c)))
-                answer += Character.toLowerCase(c);
-            else if(Pattern.matches("^[0-9]*$", String.valueOf(c)))
-                answer += c - '0';
-            else if(c == '-' || c == '_' || c == '.'){
-                if(c == '.'){
-                    if(answer.length() > 0){
-                        if(answer.charAt(answer.length()-1) != '.')
-                            answer += c;
-                    } 
-                } else
-                    answer += c;
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < new_id.length(); i++) {
+            char c = new_id.charAt(i);
+            if(Character.isLowerCase(c)) {
+                sb.append(c);
+            }
+            else if(Character.isUpperCase(c)) {
+                sb.append(Character.toLowerCase(c));
+            } else if((c >= '0' && c <= '9') || c == '-' || c =='_') {
+                sb.append(c);
+            } else if(c == '.' && sb.length() > 0 && sb.charAt(sb.length()-1) != '.') {
+                sb.append(c);
             }
         }
-        if(answer.length() > 0){
-            if(answer.charAt(answer.length() - 1) == '.')
-                answer = answer.substring(0, answer.length()-1);
+        if(sb.length() == 0) {
+            sb.append('a');
         }
-        if(answer.length() > 0){
-            if(answer.charAt(0) == '.')
-                answer = answer.substring(1, answer.length());
+        while(sb.length() > 0 && sb.charAt(sb.length()-1) == '.') {
+            sb.deleteCharAt(sb.length()-1);
         }
-        if(answer.length() == 0)
-            answer = "a";
-        if(answer.length() > 15){
-            if(answer.charAt(14) == '.')
-                answer = answer.substring(0, 14);
-            else
-                answer = answer.substring(0, 15);
-        } else if(answer.length() == 1)
-            answer = answer.repeat(3);
-        else if(answer.length() == 2)
-            answer = answer + String.valueOf(answer.charAt(1));
-        return answer;
+        if(sb.length() < 3) {
+            int len = sb.length();
+            char c = sb.charAt(len-1);
+            for(int i = 0; i < 3-len; i++) {
+                sb.append(c);
+            }
+        }
+        if(sb.length() > 15) {
+            sb.delete(15, sb.length());
+            if(sb.charAt(sb.length()-1) == '.') {
+                sb.deleteCharAt(sb.length()-1);
+            }
+        }
+        return sb.toString();
     }
 }
