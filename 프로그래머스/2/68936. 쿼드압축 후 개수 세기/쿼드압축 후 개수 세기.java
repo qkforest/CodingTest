@@ -1,27 +1,36 @@
 class Solution {
-    public boolean check(int r, int c, int size, int[][] arr){
-        for(int i = r; i < r+size; i++){
-             for(int j = c; j < c+size; j++){
-                 if(arr[r][c] != arr[i][j]) return false;
-             }
-        }
-        return true;
-    }
-    public void dc(int r, int c, int size, int[][] arr, int[] answer){
-        if(check(r, c, size, arr)){
-            answer[arr[r][c]]++;
-            return;
-        }
-        dc(r, c, size/2, arr, answer);
-        dc(r, c+size/2, size/2, arr, answer);
-        dc(r+size/2, c, size/2, arr, answer);
-        dc(r+size/2, c+size/2, size/2, arr, answer);
+    private static class Count {
+        private final int one;
+        private final int zero;
         
-        return;
+        public Count(int one, int zero) {
+            this.one = one;
+            this.zero = zero;
+        }
+        
+        public Count add(Count other) {
+            return new Count(this.one+other.one, this.zero+other.zero);
+        }
+    }
+    private Count count(int[][] arr, int y, int x, int size) {
+        int h = size / 2;
+        for(int i = x; i < x + size; i++) {
+            for(int j = y; j < y + size; j++) {
+                if(arr[j][i] != arr[y][x]) {
+                    return count(arr, y, x, h)
+                            .add(count(arr, y+h, x, h))
+                            .add(count(arr, y, x+h, h))
+                            .add(count(arr, y+h, x+h, h));
+                }
+            }
+        }
+        if (arr[y][x] == 1) {
+            return new Count(1, 0);
+        }
+        return new Count(0, 1);
     }
     public int[] solution(int[][] arr) {
-        int[] answer = new int[2];
-        dc(0, 0, arr.length, arr, answer);
-        return answer;
+        Count count = count(arr, 0, 0, arr.length);
+        return new int[] {count.zero, count.one};
     }
 }
