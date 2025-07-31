@@ -1,36 +1,28 @@
 class Solution {
-    private static class Count {
-        private final int one;
-        private final int zero;
-        
-        public Count(int one, int zero) {
-            this.one = one;
-            this.zero = zero;
-        }
-        
-        public Count add(Count other) {
-            return new Count(this.one+other.one, this.zero+other.zero);
-        }
-    }
-    private Count count(int[][] arr, int y, int x, int size) {
-        int h = size / 2;
-        for(int i = x; i < x + size; i++) {
-            for(int j = y; j < y + size; j++) {
-                if(arr[j][i] != arr[y][x]) {
-                    return count(arr, y, x, h)
-                            .add(count(arr, y+h, x, h))
-                            .add(count(arr, y, x+h, h))
-                            .add(count(arr, y+h, x+h, h));
+    private boolean check(int y, int x, int size, int[][] arr) {
+        for(int i = y; i < y + size; i++) {
+            for(int j = x; j < x + size; j++) {
+                if(arr[i][j] != arr[y][x]) {
+                    return false;
                 }
             }
         }
-        if (arr[y][x] == 1) {
-            return new Count(1, 0);
+        return true;
+    }
+    private void count(int y, int x, int size, int[][] arr, int[] answer) {
+        int h = size / 2;
+        if(check(y, x, size, arr)) {
+            answer[arr[y][x]]++;
+            return;
         }
-        return new Count(0, 1);
+        count(y, x, h, arr, answer);
+        count(y+h, x, h, arr, answer);
+        count(y, x+h, h, arr, answer);
+        count(y+h, x+h, h, arr, answer);
     }
     public int[] solution(int[][] arr) {
-        Count count = count(arr, 0, 0, arr.length);
-        return new int[] {count.zero, count.one};
+        int[] answer = new int[2];
+        count(0, 0, arr.length, arr, answer);
+        return answer;
     }
 }
