@@ -1,23 +1,34 @@
 import java.util.*;
 class Solution {
+    private final int[] first = {1, 2, 3, 4, 5};
+    private final int[] second = {2, 1, 2, 3, 2, 4, 2, 5};
+    private final int[] third = {3, 3, 1, 1, 2, 2, 4, 4, 5, 5};
+    
     public int[] solution(int[] answers) {
-        List<Integer> answer = new ArrayList<>();
-        int[] a1 = {1, 2, 3, 4, 5}, a2 ={2, 1, 2, 3, 2, 4, 2, 5}, a3 = {3, 3, 1, 1, 2, 2, 4, 4, 5, 5};
-        int s1 = 0, s2 = 0, s3 = 0; 
-        for(int i = 0; i < answers.length; i++){
-            if(answers[i] == a1[i%5])
-                s1++;
-            if(answers[i] == a2[i%8])
-                s2++;
-            if(answers[i] == a3[i%10])
-                s3++;
+        int score1 = 0;
+        int score2 = 0;
+        int score3 = 0;
+        
+        for(int i = 0; i < answers.length; i++) {
+            int answer = answers[i];
+            int f = first[i % first.length];
+            int s = second[i % second.length];
+            int t = third[i % third.length];
+            score1 += answer==f ? 1 : 0;
+            score2 += answer==s ? 1 : 0;
+            score3 += answer==t ? 1 : 0;
         }
-        if(Math.max(Math.max(s1, s2), s3) == s1)
+        int max = Math.max(score1, Math.max(score2, score3));
+        List<Integer> answer = new ArrayList<>();
+        if(score1 == max) {
             answer.add(1);
-        if(Math.max(Math.max(s1, s2), s3) == s2)
+        }
+        if(score2 == max) {
             answer.add(2);
-        if(Math.max(Math.max(s1, s2), s3) == s3)
+        }
+        if(score3 == max) {
             answer.add(3);
+        }
         return answer.stream().mapToInt(Integer::intValue).toArray();
     }
 }
