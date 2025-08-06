@@ -1,74 +1,69 @@
 import java.util.*;
+
 class Solution {
-    public List<String> exp;
-    public boolean[] visited;
-    public String[] temp;
-    public long answer;
-    public long solution(String expression) {
-        answer = 0;
-        exp = new ArrayList<>();
-        Set<String> op = new HashSet<>();
-        String num = "";
-        for(char e : expression.toCharArray()){
-            if(Character.isDigit(e)) num += e;
-            else{
-                exp.add(num);
-                num = "";
-                String operator = String.valueOf(e);
-                exp.add(operator);
-                op.add(operator);
-            }
+    private long answer;
+    private final String[] operators = {"+", "-", "*"};
+    private Set<String> set; 
+    
+    private String compute(String op, String a, String b) {
+        Long n1 = Long.parseLong(a);
+        Long n2 = Long.parseLong(b);
+        switch(op) {
+                case "+" :
+                    return String.valueOf(n1+n2);
+                case "-" :
+                    return String.valueOf(n1-n2);
+                case "*" :
+                    return String.valueOf(n1*n2);
         }
-        exp.add(num);
-        String[] arr = op.toArray(new String[0]);
-        visited = new boolean[arr.length];
-        temp = new String[arr.length];
-        dfs(0, op.size(), arr);
-        return answer;
+        return "0";
     }
-    public void dfs(int level, int size, String[] arr){
-        if(level == size){
-            List<String> copy = new ArrayList<>(exp);
-            for(String s : temp){
-                for(int i = 0; i < copy.size(); i++){
-                    long a = 0;
-                    if(copy.get(i).equals(s)){
-                        switch(s){
-                            case "-": 
-                                a = Long.valueOf(copy.get(i-1)) - Long.valueOf(copy.get(i+1));
-                                copy.set(i-1, "");
-                                copy.set(i, "");
-                                copy.set(i+1, String.valueOf(a));
-                                break;
-                            case "+": 
-                                a = Long.valueOf(copy.get(i-1)) + Long.valueOf(copy.get(i+1));
-                                copy.set(i-1, "");
-                                copy.set(i, "");
-                                copy.set(i+1, String.valueOf(a));
-                                break;
-                            case "*": 
-                                a = Long.valueOf(copy.get(i-1)) * Long.valueOf(copy.get(i+1));
-                                copy.set(i-1, "");
-                                copy.set(i, "");
-                                copy.set(i+1, String.valueOf(a));
-                                break;  
-                        }
+
+    private void dfs(Deque<String> deque) {
+        if(set.size() == 0){
+            answer = Math.max(answer, Math.abs(Long.parseLong(deque.pop())));
+            return;
+        }
+        for(int i = 0; i < 3; i++) {
+            if(set.contains(operators[i])) {
+                set.remove(operators[i]);
+                Deque<String> temp = new ArrayDeque<>(deque);
+                int count = temp.size();
+
+                while(count-- > 0) {
+                    String s = temp.pollFirst();
+                    if(s.equals(operators[i])) {
+                        temp.offerLast(compute(operators[i], temp.pollLast(), temp.pollFirst()));
+                        count--;
+                    } else {
+                        temp.offerLast(s);
                     }
                 }
-                while (copy.remove("")) {        
-                };
-            }
-            long result = Math.abs(Long.valueOf(copy.get(0)));
-            if(result > answer) answer = result;
-        }else{
-            for(int i = 0; i < size; i++){
-                if(!visited[i]){
-                    visited[i] = true;
-                    temp[level] = arr[i];
-                    dfs(level+1, size, arr);
-                    visited[i] = false;
-                }
+                dfs(temp);
+                set.add(operators[i]);
             }
         }
+    }
+
+    public long solution(String expression) {
+        answer = 0;
+        Deque<String> deque = new ArrayDeque<>();
+        set = new HashSet<>();
+        StringBuilder num = new StringBuilder();
+        
+        for(char c : expression.toCharArray()) {
+            if(c >= '0' && c <= '9') {
+                num.append(c);   
+            } else {
+                deque.offerLast(num.toString());
+                deque.offerLast(String.valueOf(c));
+                set.add(String.valueOf(c));
+                num.setLength(0);
+            }
+        }
+        deque.offerLast(num.toString());
+        
+        dfs(deque);
+        return answer;
     }
 }
