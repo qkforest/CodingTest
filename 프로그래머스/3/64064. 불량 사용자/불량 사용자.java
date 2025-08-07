@@ -1,46 +1,47 @@
 import java.util.*;
+
 class Solution {
-    public static boolean[] visited;
-    public static int count;
-    public static Set<String> duplicated;
-    public int solution(String[] user_id, String[] banned_id) {
-        visited = new boolean[user_id.length];
-        count = banned_id.length;
-        duplicated = new HashSet<>();
-        dfs(0, user_id, banned_id);
-        return duplicated.size();
-    }
-    public void dfs(int level, String[] user_id, String[] banned_id){
-        if(level == count){
-            int[] temp = new int[count];
-            int idx = 0;
-            for (int i = 0; i < user_id.length; i++) {
-                if (visited[i]) {
-                    temp[idx] = i;
-                    idx++;
-                }
+    private static int count;
+    private static Set<String> answer;
+    private static Set<Integer> comb;
+    
+    private void dfs(int level, String[] user_id, String[] banned_id) {
+        if(level == count) {
+            StringBuilder sb = new StringBuilder();
+            for(int n : comb) {
+                sb.append(n).append(" ");
             }
-            duplicated.add(Arrays.toString(temp));
-        } else{
-            for(int i = 0; i < visited.length; i++){
-                if(!visited[i]){
-                    if(check(user_id[i], banned_id[level])){
-                        visited[i] = true;
+            answer.add(sb.toString());
+            return;
+        }
+        
+        for(int i = 0; i < user_id.length; i++) {
+            if(!comb.contains(i)) {
+                if(user_id[i].length() == banned_id[level].length()) {
+                    boolean flag = true;
+                    for(int j = 0; j < user_id[i].length(); j++) {
+                        if(banned_id[level].charAt(j) == '*' || banned_id[level].charAt(j) == user_id[i].charAt(j)) {
+                            continue;
+                        } else {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if(flag) {
+                        comb.add(i);
                         dfs(level+1, user_id, banned_id);
-                        visited[i] = false;
+                        comb.remove(i);
                     }
                 }
             }
-        } 
-    }
-    public boolean check(String user_id, String banned_id){
-        if(user_id.length() != banned_id.length()) return false;
-        for(int i = 0; i < user_id.length(); i++){
-            if(banned_id.charAt(i) == '*') continue;
-            else{
-                if(user_id.charAt(i) != banned_id.charAt(i)) return false;
-            }
         }
-        return true;
+    }
+    
+    public int solution(String[] user_id, String[] banned_id) {
+        answer = new HashSet<>();
+        count = banned_id.length;
+        comb = new TreeSet<>();
+        dfs(0, user_id, banned_id);
+        return answer.size();
     }
 }
