@@ -1,12 +1,17 @@
 import java.util.*;
+
 class Solution {
     public int[] solution(int[] numbers) {
-        Set<Integer> answer = new TreeSet<>();
-        for(int i = 0; i < numbers.length-1; i++){
-            for(int j = i+1; j < numbers.length; j++){
-                answer.add(numbers[i]+numbers[j]);
+        List<Integer> answer = new ArrayList<>();
+        for(int i = 0; i < numbers.length; i++) {
+            for(int j = i+1; j < numbers.length; j++) {
+                int sum = numbers[i] + numbers[j];
+                if(!answer.contains(sum)) {
+                    answer.add(sum);
+                }
             }
         }
-        return Arrays.stream(answer.toArray(new Integer[0])).mapToInt(Integer::intValue).toArray();
+        Collections.sort(answer);
+        return answer.stream().mapToInt(Integer::intValue).toArray();
     }
 }
