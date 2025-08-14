@@ -1,43 +1,51 @@
 import java.util.*;
+
 class Solution {
-    static Map<String, List<Integer>> comb = new HashMap<>();
-    public int[] solution(String[] info, String[] query) {
-        int[] answer = new int[query.length];
-        
-        for(int i = 0; i < info.length; i++)
-            dfs(0, "", info[i].split(" "));
-        
-        for(List<Integer> score : comb.values())
-            Collections.sort(score);
-        
-        for(int i = 0; i < query.length; i++){
-            String[] q = query[i].split(" and ");
-            String[] sp = q[3].split(" ");
-            q[3] = sp[0];
-            String key = String.join("", q);
-            int score = Integer.parseInt(sp[1]);
-            if(comb.containsKey(key)){
-                List<Integer> temp = comb.get(key);
-                int start = 0;
-                int end = temp.size() - 1;
-                while(start <= end){
-                    int mid = (start + end) / 2;
-                    if(temp.get(mid) < score)
-                        start = mid + 1;
-                    else
-                        end = mid - 1;
-                }
-                answer[i] = temp.size() - start;
-            }
-        }
-        return answer;
-    }
-    public void dfs(int idx, String s, String[] arr){
-        if(idx == 4){
-            comb.computeIfAbsent(s, key -> new ArrayList<>()).add(Integer.parseInt(arr[4]));
+    private Map<String, List<Integer>> map;
+    private int score;
+    private void buildMap(String[] arr, int level, String temp) {
+        if(level == 4) {
+            map.computeIfAbsent(temp, k -> new ArrayList<>()).add(Integer.parseInt(arr[4]));
             return;
         }
-        dfs(idx+1, s+arr[idx], arr);
-        dfs(idx+1, s+"-", arr);
+        buildMap(arr, level+1, temp+"-");
+        buildMap(arr, level+1, temp+arr[level]);
+    }
+    private int binarySearch(List<Integer> list) {
+        int l = 0;
+        int r = list.size() - 1;
+        while(l < r) {
+            int mid = (l + r) / 2;
+            if(list.get(mid) < score) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+        if(list.get(l) < score) {
+            return 0;
+        }
+        return list.size() - l;
+    }
+    public int[] solution(String[] info, String[] query) {
+        map = new HashMap<>();
+        for(String i : info) {
+            String[] arr = i.split(" ");
+            buildMap(arr, 0, "");
+        }
+        for(List<Integer> list : map.values()) {
+            Collections.sort(list);
+        }
+        int[] answer = new int[query.length];
+        for(int i = 0; i < answer.length; i++) {
+            String[] arr = query[i].split(" (and )?");
+            String key = String.join("", Arrays.copyOf(arr, arr.length - 1));
+            score = Integer.parseInt(arr[arr.length - 1]);
+            if(!map.containsKey(key)) {
+                continue;
+            }
+            answer[i] = binarySearch(map.get(key));
+        }
+        return answer;
     }
 }
