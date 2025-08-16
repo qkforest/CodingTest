@@ -1,24 +1,27 @@
 class Solution {
+    private long count(long time, int n, int[] times) {
+        long cnt = 0;
+        for(int t : times) {
+            if(cnt >= n) {
+                break;
+            }
+            cnt += time / (long)t;
+        }
+        return cnt;
+    }
     public long solution(int n, int[] times) {
-        long answer = 0;
-        long left = 0;
-        long right = 1000000000 * (long)n;
+        long answer = times[times.length-1] * (long) n;
+        long left = 1;
+        long right = answer;
         while(left <= right) {
-            long mid = (left + right) / 2;
-            if(count(mid, times) >= n) {
-                right = mid - 1;
+            long mid = (left + right) / (long)2;
+            if(count(mid, n, times) >= n) {
                 answer = mid;
+                right = mid - 1;
             } else {
                 left = mid + 1;
             }
         }
         return answer;
-    }
-    public long count(long totalTime, int[] times) {
-        long count = 0;
-        for(int time : times) {
-            count += totalTime/(long)time;
-        }
-        return count;
     }
 }
