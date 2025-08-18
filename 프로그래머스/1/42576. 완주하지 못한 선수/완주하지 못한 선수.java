@@ -1,35 +1,19 @@
 import java.util.*;
-
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        String answer = "";
-        HashMap<String, Integer> p = new HashMap<>();
-        
-        for(int i = 0; i < participant.length; i++){
-            if(p.containsKey(participant[i]))
-                p.put(participant[i], p.get(participant[i])+1);
-            else
-                p.put(participant[i], 1);
+        Map<String, Integer> map = new HashMap<>();
+        for(String p : participant) {
+            map.merge(p, 1, Integer::sum);
         }
-
-        for (String c : completion){
-            if(!(p.containsKey(c)))
-                answer = c;
-            else {
-                if(p.containsKey(c))
-                    p.put(c, p.get(c)-1);
-            } 
-        }
-        
-        if(answer.equals("")){
-            for(String n :p.keySet()){
-                if(p.get(n) == 1){
-                    answer = n;
-                    break;
-                }
+        for(String c : completion) {
+            if(map.merge(c, -1, Integer::sum) == 0) {
+                map.remove(c);
             }
         }
-            
+        String answer = "";
+        for(String n : map.keySet()) {
+            answer = n;
+        }
         return answer;
     }
 }
