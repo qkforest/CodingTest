@@ -1,36 +1,37 @@
 import java.util.*;
+
 class Solution {
-    public int solution(int distance, int[] rocks, int n) {
-        int answer = 0;
-        int left = 1;
-        int right = distance;
-        Arrays.sort(rocks);
-        while(left <= right) {
-            int mid = (left + right) / 2;
-            if(removeRocks(rocks, mid, distance) <= n) {
-                answer = mid;
-                left = mid + 1;
-            }
-            else {
-                right = mid - 1;
-            }
-        }
-        return answer;
-    }
-    public int removeRocks(int[] rocks, int d, int end) {
+    private boolean isVaild(int d, int[] rocks, int n) {
+        int last = 0;
         int count = 0;
-        int previous = 0;
-        for(int i = 0; i < rocks.length; i++) {
-            if(rocks[i] - previous < d) {
+        
+        for(int r : rocks) {
+            if(r - last < d) {
                 count++;
+                continue;
             }
-            else {
-                previous = rocks[i];
+            last = r;
+        }
+        
+        return count <= n;
+    }
+    public int solution(int distance, int[] rocks, int n) {
+        rocks = Arrays.copyOf(rocks, rocks.length+1);
+        rocks[rocks.length-1] = distance;
+        Arrays.sort(rocks);
+        
+        int left = 1;
+        int right = distance + 1;
+
+        while(right - left > 1) {
+            int mid = (left + right) / 2;
+            if(isVaild(mid, rocks, n)) {
+                left = mid;
+            } else {
+                right = mid;
             }
         }
-        if(end - previous < d) {
-            count++;
-        }
-        return count;
+        
+        return left;
     }
 }
