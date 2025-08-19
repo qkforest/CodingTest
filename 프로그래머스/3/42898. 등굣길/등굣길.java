@@ -1,23 +1,32 @@
-import java.util.*;
 class Solution {
     public int solution(int m, int n, int[][] puddles) {
-        int[][] dp = new int[n][m];
-        dp[0][0] = 1;
-        
-        for(int[] puddle : puddles)
-            dp[puddle[1]-1][puddle[0]-1] = -1;
-          
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                if(dp[i][j] == 0){
-                    if(i != 0 && dp[i-1][j] != -1)
-                        dp[i][j] += dp[i-1][j];
-                    if(j != 0 && dp[i][j-1] != -1)
-                        dp[i][j] += dp[i][j-1];
-                    dp[i][j] %= 1000000007;
+        int[][] routes = new int[n][m];
+        for(int[] p : puddles) {
+            routes[p[1]-1][p[0]-1] = -1;
+        }
+        int v = 1;
+        for(int i = 0; i < m; i++) {
+            if(routes[0][i] == -1) {
+                v = 0; 
+            }
+            routes[0][i] = v;
+        }
+        v = 1;
+        for(int i = 0; i < n; i++) {
+             if(routes[i][0] == -1) {
+                v = 0;
+            }
+            routes[i][0] = v;
+        }
+        for(int i = 1; i < n; i++) {
+            for(int j = 1; j < m; j++) {
+                if(routes[i][j] == -1) {
+                    routes[i][j] = 0;
+                    continue;
                 }
+                routes[i][j] = (routes[i-1][j] + routes[i][j-1]) % 1000000007;
             }
         }
-        return dp[n-1][m-1];
+        return routes[n-1][m-1];
     }
 }
