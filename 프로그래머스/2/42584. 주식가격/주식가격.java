@@ -1,22 +1,16 @@
 import java.util.*;
+
 class Solution {
     public int[] solution(int[] prices) {
-        int[] answer = new int[prices.length];
-        int temp = 0, s = 0;
-        Queue<Integer> q = new LinkedList<>();
-        for(int i = 0; i < prices.length; i++){
-            if(q.peek() != null){
-                s = q.size();
-                for(int j = 0; j < s; j++){
-                    temp = q.poll();
-                    if(prices[temp] <= prices[i]){
-                        answer[temp] += 1;
-                        q.offer(temp);
-                    } else
-                        answer[temp] += 1;
-                }
+        int len = prices.length;
+        int[] answer = new int[len];
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[0] - a[0]);
+        for(int i = 0; i < len; i++) {
+            while(!pq.isEmpty() && (pq.peek()[0] > prices[i] || i == len-1)) {
+                int[] pre = pq.poll();
+                answer[pre[1]] = i - pre[1];
             }
-            q.offer(i);
+            pq.offer(new int[] {prices[i] , i});
         }
         return answer;
     }
