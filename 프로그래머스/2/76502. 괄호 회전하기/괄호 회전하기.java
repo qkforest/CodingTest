@@ -1,33 +1,43 @@
 import java.util.*;
+
 class Solution {
     public int solution(String s) {
-        int answer = 0, count = 0;
-        String temp;
-        Stack<Character> stack = new Stack<>();
-        for(int i = 0; i < s.length(); i++){
-            stack.clear();
-            count = 0;
-            temp = s.substring(i, s.length()) + s.substring(0, i);
-            for(char c : temp.toCharArray()){
-                if(c == '(' || c == '['|| c == '{')
+        char[] arr = s.toCharArray();
+        int len = arr.length;
+        int answer = 0;
+        for(int start = 0; start < len; start++) {
+            boolean vaild = true;
+            Deque<Character> stack = new ArrayDeque<>();
+            for(int l = 0; l < len; l++) {
+                char c = arr[(start+l) % len];
+                if(c == '(' || c == '{' || c == '[') {
                     stack.push(c);
-                else {
-                    if(stack.empty())
+                    continue;
+                }
+                if(c == ')') {
+                    if(stack.isEmpty() || stack.peekFirst() != '(') {
+                        vaild = false;
                         break;
-                    else {
-                        char t = stack.pop();
-                        if(c == ')' && t != '(')
-                            break;
-                        else if(c == '}' && t != '{')
-                            break;
-                        else if(c == ']' && t != '[')
-                            break;
+                    }
+                } else if(c == '}') {
+                    if(stack.isEmpty() || stack.peekFirst() != '{') {
+                        vaild = false;
+                        break;
+                    }
+                } else {
+                    if(stack.isEmpty() || stack.peekFirst() != '[') {
+                        vaild = false;
+                        break;
                     }
                 }
-                count++;
+                stack.pop();
             }
-            if(count == s.length() && stack.empty())
+            if(!stack.isEmpty()) {
+                vaild = false;
+            }
+            if(vaild) {
                 answer++;
+            }
         }
         return answer;
     }
