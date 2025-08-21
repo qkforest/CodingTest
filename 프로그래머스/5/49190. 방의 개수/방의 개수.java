@@ -15,18 +15,19 @@ class Solution {
         }
         
         public static String id(int x, int y) {
-            return String.format(("%d, %d"), x, y);
+            return String.format("(%d, %d)", x, y);
         }
     }
-    
-    private static final int[][] directions = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
-    
+
+    private static int[][] directions = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
+
     public int solution(int[] arrows) {
         int answer = 0;
         Map<String, Vertex> vertices = new HashMap<>();
         Vertex v = new Vertex(0, 0);
         vertices.put(v.id, v);
-        for(int a : arrows) {
+        
+          for(int a : arrows) {
             for(int i = 0; i < 2; i++) {
                 int x = v.x + directions[a][0];
                 int y = v.y + directions[a][1];
@@ -39,11 +40,12 @@ class Solution {
                 }
                 
                 Vertex u = vertices.get(id);
-                v.connectedVertices.add(id);
+                v.connectedVertices.add(u.id);
                 u.connectedVertices.add(v.id);
-                v = vertices.get(id);
+                v = u;
             }
         }
+        
         return answer;
     }
 }
