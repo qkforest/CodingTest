@@ -1,51 +1,49 @@
 import java.util.*;
-public class Solution {
-    public int[][] directions = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
 
-    public int solution(int[] arrows) {
-        int answer = 0;
+class Solution {
+    private static class Vertex {
+        public final int x;
+        public final int y;
+        public final String id;
+        public final Set<String> connectedVertices;
         
-        Map<String, Vertex> vertices = new HashMap<>();
-        Vertex now = new Vertex(0, 0);
-        vertices.put(now.id, now);
-        
-        for (int idx : arrows) {
-            for (int i = 0; i < 2; i++) {
-                int x = now.x + directions[idx][1];
-                int y = now.y + directions[idx][0];
-                String id = Vertex.id(x, y);
-
-                if (!vertices.containsKey(id)) {
-                    vertices.put(id, new Vertex(x, y));
-                } else if (!now.connectedvertices.contains(id)) {
-                    answer++;
-                }
-
-                Vertex next = vertices.get(id);
-                now.connectedvertices.add(next.id);
-                next.connectedvertices.add(now.id);
-                now = vertices.get(id);
-            }
-        }
-        
-        return answer;
-    }
-    
-    public static class Vertex {
-        public int x;
-        public int y;
-        public String id;
-        public Set<String> connectedvertices;
-
         public Vertex(int x, int y) {
             this.x = x;
             this.y = y;
             this.id = id(x, y);
-            this.connectedvertices = new HashSet<>();
+            this.connectedVertices = new HashSet<>();
         }
-
+        
         public static String id(int x, int y) {
-            return String.format("(%d, %d)", x, y);
+            return String.format(("%d, %d"), x, y);
         }
+    }
+    
+    private static final int[][] directions = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
+    
+    public int solution(int[] arrows) {
+        int answer = 0;
+        Map<String, Vertex> vertices = new HashMap<>();
+        Vertex v = new Vertex(0, 0);
+        vertices.put(v.id, v);
+        for(int a : arrows) {
+            for(int i = 0; i < 2; i++) {
+                int x = v.x + directions[a][0];
+                int y = v.y + directions[a][1];
+                String id = Vertex.id(x, y);
+                
+                if(!vertices.containsKey(id)) {
+                    vertices.put(id, new Vertex(x, y));
+                } else if(!v.connectedVertices.contains(id)) {
+                    answer++;
+                }
+                
+                Vertex u = vertices.get(id);
+                v.connectedVertices.add(id);
+                u.connectedVertices.add(v.id);
+                v = vertices.get(id);
+            }
+        }
+        return answer;
     }
 }
