@@ -1,33 +1,44 @@
 class Solution {
+    private int countWin(int u, boolean[][] graph, boolean[] visited) {
+        int count = 1;
+        for(int v = 0; v < graph[0].length; v++) {
+            if(!graph[u][v] || visited[v]) {
+                continue;
+            }
+            visited[v] = true;
+            count += countWin(v, graph, visited);
+        }
+        return count;
+    }
+    
+    private int countLose(int v, boolean[][] graph, boolean[] visited) {
+        int count = 1;
+        for(int u = 0; u < graph.length; u++) {
+            if(!graph[u][v] || visited[u]) {
+                continue;
+            }
+            visited[u] = true;
+            count += countLose(u, graph, visited);
+        }
+        return count;
+    }
+    
     public int solution(int n, int[][] results) {
+        boolean[][] graph = new boolean[n][n];
         int answer = 0;
-        int[][] dp = new int[n][n];
         
-        for(int[] result : results){
-            dp[result[0]-1][result[1]-1] = 1;
-            dp[result[1]-1][result[0]-1] = -1;
+        for(int[] e : results) {
+            graph[e[0]-1][e[1]-1] = true;
         }
-        for(int k = 0; k < n; k++){
-            for(int i = 0; i < n; i++){
-                for(int j = 0; j < n; j++){
-                    if(dp[i][j] != 0) continue;
-                    if(dp[i][k] == 1 && dp[k][j] == 1)
-                        dp[i][j] = 1;
-                    if(dp[i][k] == -1 && dp[k][j] == -1)
-                        dp[i][j] = -1;
-                }
-            }
-        }
-        for(int i = 0; i < n; i++){
-            int sum = 0;
-            for(int j = 0; j < n; j++){
-                if(dp[i][j] != 0)
-                    sum++;
-            }
-            if(sum == n-1)
+        
+        for(int u = 0; u < n; u++) {
+            int win = countWin(u, graph, new boolean[n]) - 1;
+            int lose = countLose(u, graph, new boolean[n]) - 1;
+            if(win + lose + 1 == n) {
                 answer++;
+            }
         }
-        
+
         return answer;
     }
 }
