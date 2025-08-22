@@ -1,32 +1,33 @@
 import java.util.*;
+
 class Solution {
     public int[] solution(String[] operations) {
         int[] answer = new int[2];
-        Integer min, max;
-        PriorityQueue<Integer> queue = new PriorityQueue<>();
-        PriorityQueue<Integer> queue2 = new PriorityQueue<>(Collections.reverseOrder());
-        for(String op : operations){
-            switch(op.charAt(0)){
-                case 'I':
-                    queue.offer(Integer.parseInt(op.substring(2)));
-                    queue2.offer(Integer.parseInt(op.substring(2)));
-                    break;
-                case 'D':
-                    if(op.equals("D -1")){
-                        min = queue.poll();
-                        if(min != null)
-                            queue2.remove(min);
-                    }else {
-                       max = queue2.poll();
-                        if(max != null)
-                            queue.remove(max); 
-                    }
+        List<Integer> list = new ArrayList<>();
+        
+        for(String o : operations) {
+            String[] arr = o.split(" ");
+            if(arr[0].equals("I")) { 
+                list.add(Integer.parseInt(arr[1]));
+            } else {
+                if(list.isEmpty()){
+                    continue;
+                }
+                Collections.sort(list);
+                if(arr[1].equals("-1")) {
+                    list.remove(0);
+                } else {
+                    list.remove(list.size()-1);
+                }
             }
         }
-        if(queue.size() != 0){
-            answer[0] = queue2.poll();
-            answer[1] = queue.poll();
+        
+        if(!list.isEmpty()){
+            Collections.sort(list);
+            answer[0] = list.get(list.size()-1);
+            answer[1] = list.get(0); 
         }
+        
         return answer;
     }
 }
