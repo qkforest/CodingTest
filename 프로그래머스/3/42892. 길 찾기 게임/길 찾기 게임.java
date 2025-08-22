@@ -1,8 +1,7 @@
 import java.util.*;
-
 class Solution {
-    private static int len;
-    private static class Node {       
+    private static int len, idx;
+    private static class Node {
         public final int value;
         public final int x;
         public final int y;
@@ -10,12 +9,13 @@ class Solution {
         public Node left;
         public Node right;
         
-        private Node(int value, int x, int y) {
+        public Node(int value, int x, int y) {
             this.value = value;
             this.x = x;
             this.y = y;
         }
     }
+    
     private Node constructTree(Node[] nodes) {
         Node root = nodes[0];
         
@@ -25,7 +25,6 @@ class Solution {
         
         return root;
     }
-    
     private void insert(Node root, Node node) {
         if(node.x < root.x) {
             if(root.left == null) {
@@ -42,40 +41,43 @@ class Solution {
         }
     }
     
-    private void preOrder(Node node, List<Integer> visit) {
-        visit.add(node.value);
-        if(node.left != null) {
-            preOrder(node.left, visit);
+    private void preOrder(Node root, int[][] answer) {
+        answer[0][idx++] = root.value;
+        if(root.left != null) {
+            preOrder(root.left, answer);
         }
-        if(node.right != null) {
-            preOrder(node.right, visit);
+        if(root.right != null) {
+            preOrder(root.right, answer);
         }
     }
     
-    private void postOrder(Node node, List<Integer> visit) {
-        if(node.left != null) {
-            postOrder(node.left, visit);
+    private void postOrder(Node root, int[][] answer) {
+        if(root.left != null) {
+            postOrder(root.left, answer);
         }
-        if(node.right != null) {
-            postOrder(node.right, visit);
+        if(root.right != null) {
+            postOrder(root.right, answer);
         }
-        visit.add(node.value);
+        answer[1][idx++] = root.value;
     }
-    
     
     public int[][] solution(int[][] nodeinfo) {
         len = nodeinfo.length;
+        idx = 0;
+        int[][] answer = new int[2][len];
         Node[] nodes = new Node[len];
+        
         for(int i = 0; i < len; i++) {
             nodes[i] = new Node(i+1, nodeinfo[i][0], nodeinfo[i][1]);
         }
+        
         Arrays.sort(nodes, (a, b) -> b.y - a.y);
         Node root = constructTree(nodes);
-        List<Integer> preOrder = new ArrayList<>();
-        List<Integer> postOrder = new ArrayList<>();
-        preOrder(root, preOrder);
-        postOrder(root, postOrder);
-        return new int[][] {preOrder.stream().mapToInt(Integer::intValue).toArray(),
-            postOrder.stream().mapToInt(Integer::intValue).toArray()};
+        
+        preOrder(root, answer);
+        idx = 0;
+        postOrder(root, answer);
+        
+        return answer;
     }
 }
