@@ -1,40 +1,40 @@
-import java.util.*;
 class Solution {
+    private static final int[][] pos = {{3, 1}, {0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 1}, {1, 2}, {2, 0}, {2, 1}, {2, 2}};
     public String solution(int[] numbers, String hand) {
-        String answer = "";
-        String[][] keypads = {{"1", "4", "7", "*"}, {"2", "5", "8", "0"}, {"3", "6", "9", "#"}};
-        int[] lPos = {0, 3}, rPos = {2, 3};
-        for(int i = 0; i < numbers.length; i++){
-            for(int j = 0; j < keypads.length; j++){
-                for(int k = 0; k < keypads[0].length; k++){
-                    if(keypads[j][k].equals(String.valueOf(numbers[i]))){
-                        if(j == 0){
-                            answer += "L";
-                            lPos[0] = j; lPos[1] = k;
-                        } else if (j == 2){
-                            answer += "R";
-                            rPos[0] = j; rPos[1] = k;
-                        } else {
-                            if(Math.abs(j - lPos[0])+Math.abs(k - lPos[1]) < Math.abs(j - rPos[0])+Math.abs(k - rPos[1])){
-                                answer += "L";
-                                lPos[0] = j; lPos[1] = k;
-                            } else if(Math.abs(j - lPos[0])+Math.abs(k - lPos[1]) > Math.abs(j - rPos[0])+Math.abs(k - rPos[1])){
-                                answer += "R";
-                                rPos[0] = j; rPos[1] = k;
-                            } else {
-                                if(hand.equals("right")){
-                                    answer += "R";
-                                    rPos[0] = j; rPos[1] = k;
-                                } else {
-                                    answer += "L";
-                                    lPos[0] = j; lPos[1] = k;
-                                }
-                            }  
-                        }
+        StringBuilder sb = new StringBuilder();
+        int[] left = new int[] {3, 0};
+        int[] right = new int[] {3, 2};
+        int[] now;
+        
+        for(int n : numbers) {
+            now = pos[n];
+            if(n == 1 || n == 4 || n == 7) {
+                left = now;
+                sb.append("L");
+            } else if(n == 3 || n == 6 || n == 9) {
+                right = now;
+                sb.append("R");
+            } else {
+                int l = Math.abs(now[0] - left[0]) + Math.abs(now[1] - left[1]);
+                int r = Math.abs(now[0] - right[0]) + Math.abs(now[1] - right[1]);
+                if(l < r) {
+                    left = now;
+                    sb.append("L");
+                } else if(l > r){
+                    right = now;
+                    sb.append("R");
+                } else {
+                    if(hand.equals("left")) {
+                        left = now;
+                        sb.append("L");   
+                    } else {
+                        right = now;
+                        sb.append("R");
                     }
                 }
             }
         }
-        return answer;
+        
+        return sb.toString();
     }
 }
