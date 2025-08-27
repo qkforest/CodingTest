@@ -1,23 +1,29 @@
+import java.util.*;
+
 class Solution {
     public int solution(String skill, String[] skill_trees) {
-        int answer = 0, pre = 0, curr = 0;
-        for(String s : skill_trees){
-            boolean ans = true;
-            pre = s.indexOf(skill.charAt(0));
-            for(int i = 1; i < skill.length(); i++){
-                curr = s.indexOf(skill.charAt(i));
-                if(pre >= 0 && pre < curr) pre = curr;
-                else if(pre == -1 && curr == -1) continue;
-                else if(pre >= 0 && curr == -1) {
-                    pre = curr;
+        int answer = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i = 0; i < skill.length(); i++) {
+            map.put(skill.charAt(i), i+1);
+        }
+        for(String s : skill_trees) {
+            int now = 1;
+            boolean isVaild = true;
+            for(char c : s.toCharArray()) {
+                if(!map.containsKey(c)) {
                     continue;
-                } 
-                else {
-                    ans = false;
+                }
+                if(now < map.get(c)) {
+                    isVaild = false;
                     break;
+                } else {
+                    now++;
                 }
             }
-            if(ans) answer++;
+            if(isVaild) {
+                answer++;
+            }
         }
         return answer;
     }
