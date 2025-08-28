@@ -1,29 +1,45 @@
-import java.util.*;
 class Solution {
-    public boolean[] visited;
+    private static int[] parents;
+    private int find(int a) {
+        if(parents[a] == a) {
+            return a;
+        }
+        return parents[a] = find(parents[a]);
+    }
+    private void union(int a , int b) {
+        int aParent = find(a);
+        int bParent = find(b);
+        if(aParent == bParent) {
+            return;
+        }
+        if(aParent < bParent) {
+            parents[bParent] = aParent;
+        } else {
+            parents[aParent] = bParent;
+        }
+    }
     public int solution(int n, int[][] computers) {
-        int answer = 0;
-        visited = new boolean[n];
+        parents = new int[n];
+        for(int i = 1; i < n; i++) {
+            parents[i] = i;
+        }
         for(int i = 0; i < n; i++) {
-            if(!visited[i]) {
+            for(int j = 0; j < n; j++) {
+                if(i == j || computers[i][j] == 0) {
+                    continue;
+                }
+                union(i, j);
+            }
+        }
+        boolean[] visited = new boolean[n];
+        int answer = 0;
+        for(int i = 0; i < n; i++) {
+            int p = find(parents[i]);
+            if(!visited[p]) {
+                visited[p] = true;
                 answer++;
-                visited[i] = true;
-                bfs(i, n, computers);
             }
         }
         return answer;
-    }
-    public void bfs(int start, int n, int[][] computers) {
-        Queue<Integer> q = new LinkedList<>();
-        q.offer(start);
-        while(!q.isEmpty()){
-            int now = q.poll();
-            for(int i = 0; i < n; i++) {
-                if(!visited[i] && computers[now][i] == 1) {
-                    visited[i] = true;
-                    q.offer(i);
-                }
-            }
-        }
     }
 }
