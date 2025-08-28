@@ -1,39 +1,35 @@
 class Solution {
-    public boolean[] visited;
-    public int answer;
-    public int solution(String begin, String target, String[] words) {
-        answer = Integer.MAX_VALUE;
-        visited = new boolean[words.length];
-        dfs(begin, target, words, 0);
-        if(answer == Integer.MAX_VALUE) {
-            answer = 0;
-        }
-        return answer;
-    }
-    public void dfs(String now, String target, String[] words, int count) {
-        if(now.equals(target)){
-            answer = Math.min(answer, count);
+    private int answer;
+    private void dfs(String now, String target, int cnt, String[] words, boolean[] visited) {
+        if(cnt == words.length){
             return;
         }
-        for(int i = 0; i < words.length; i++) {
-            if(!visited[i] && diff(now, words[i])){
-                visited[i] = true;
-                dfs(words[i], target, words, count+1);
-                visited[i] = false;
+        if(now.equals(target)) {
+            answer = Math.min(answer, cnt);
+            return;
+        }
+        for(int i = 0 ; i < words.length; i++) {
+            if(!visited[i]) {
+                int d = 0;
+                for(int j = 0; j < now.length(); j++) {
+                    if(now.charAt(j) != words[i].charAt(j)) {
+                        d++;
+                    }
+                    if(d > 1) {
+                        break;
+                    }
+                }
+                if(d == 1) {
+                    visited[i] = true;
+                    dfs(words[i], target, cnt+1, words, visited);
+                    visited[i] = false;
+                }
             }
         }
     }
-    public boolean diff(String a, String b){
-        int count = 0;
-        int len = a.length();
-        for(int i = 0; i < len; i++){
-            if(a.charAt(i) != b.charAt(i)){
-                count++;
-            }
-        }
-        if(count == 1) {
-            return true;
-        }
-        return false;
+    public int solution(String begin, String target, String[] words) {
+        answer = Integer.MAX_VALUE;
+        dfs(begin, target, 0, words, new boolean[words.length]);
+        return answer == Integer.MAX_VALUE ? 0 : answer;
     }
 }
