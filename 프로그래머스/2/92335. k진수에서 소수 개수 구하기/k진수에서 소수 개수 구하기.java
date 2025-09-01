@@ -1,5 +1,5 @@
 class Solution {
-    private boolean isPrime(Long n) {
+    private boolean isPrime(long n) {
         if(n == 1) {
             return false;
         }
@@ -10,25 +10,15 @@ class Solution {
         }
         return true;
     }
+    
     public int solution(int n, int k) {
         int answer = 0;
         String num = Integer.toString(n, k);
-        StringBuilder sb = new StringBuilder();
-        for(char c : num.toCharArray()) {
-            if(c == '0') {
-                if(sb.length() == 0) {
-                    continue;
-                }
-                if(isPrime(Long.parseLong(sb.toString()))) {
-                    answer++;
-                }
-                sb.setLength(0);
-            } else {
-                sb.append(c);
+        String[] arr = num.split("0+");
+        for(String p : arr) {
+            if(isPrime(Long.parseLong(p))) {
+                answer++;
             }
-        }
-        if(sb.length() > 0 && isPrime(Long.parseLong(sb.toString()))) {
-            answer++;
         }
         return answer;
     }
