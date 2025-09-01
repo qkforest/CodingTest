@@ -1,55 +1,54 @@
 import java.util.*;
 class Solution {
-    static int max = 0;
-    static int round;
-    static int[] apeach;
-    static int[] answer;
-    public int[] solution(int n, int[] info) {
-        round = n;
-        apeach = info;
-        int scoreA = 0;
-        for(int i = 0; i < info.length; i++){
-            if(info[i] > 0)
-                scoreA += (10 - i);
+    private int max = 0;
+    private int[] answer = {-1};
+    private void dfs(int start, int n, int[] info, int[] temp) {
+        if(start == 11 && n > 0) {
+            return;
         }
-        int[] ryan = new int[11];
-        dfs(0, 0, 0, scoreA, ryan);
-        if(max == 0)
-            return new int[] {-1};
-        return answer;
-    }
-    public void dfs(int n, int idx, int scoreR, int scoreA, int[] ryan){
-        if(n == round){
-            if(scoreR > scoreA){
-                if(max < scoreR - scoreA){
-                    answer = ryan.clone();
-                    max = scoreR - scoreA;
-                } 
-                if(max == scoreR - scoreA){
-                    for(int i = answer.length-1; i >= 0; i--){
-                        if(answer[i] < ryan[i]){
-                            answer = ryan.clone();
-                            break;
-                        }
-                        else if(answer[i] > ryan[i])
-                            break;
+        if(n == 0) {
+            int scoreR = 0;
+            int scoreP = 0;
+            for(int i = 0; i < 11; i++) {
+                if(info[i] == 0 && temp[i] == 0) {
+                    continue;
+                }
+                if(info[i] >= temp[i]) {
+                    scoreP += 10 - i;
+                } else {
+                    scoreR += 10 - i;
+                }
+            }
+            if(scoreR <= scoreP) {
+                return;
+            }
+            if(scoreR - scoreP > max) {
+                max = scoreR - scoreP;
+                answer = temp.clone();
+            } else if(scoreR - scoreP == max) {
+                for(int i = 10; i >= 0; i--) {
+                    if(answer[i] == temp[i]) {
+                        continue;
+                    } else if(answer[i] > temp[i]) {
+                        break;
+                    } else {
+                        answer = temp.clone();
+                        break;
                     }
                 }
             }
             return;
         }
-        for(int i = idx; i < apeach.length; i++){
-            if(round-(n+apeach[i]+1) >= 0){
-                ryan[i] = apeach[i]+1;
-                if(apeach[i] > 0)
-                    dfs(n+apeach[i]+1, i+1, scoreR+10-i, scoreA-(10-i), ryan);
-                else
-                    dfs(n+apeach[i]+1, i+1, scoreR+10-i, scoreA, ryan);
-            } else{
-                ryan[i] = round - n;
-                dfs(n+ryan[i], i+1, scoreR, scoreA, ryan);
+        for(int i = start; i < 11; i++) {
+            for(int j = 0; j <= n; j++) {
+                temp[i] = j;
+                dfs(i+1, n - j, info, temp);
+                temp[i] = 0;
             }
-            ryan[i] = 0;
-        } 
+        }
+    }
+    public int[] solution(int n, int[] info) {
+        dfs(0, n, info, new int[11]);
+        return answer;
     }
 }
