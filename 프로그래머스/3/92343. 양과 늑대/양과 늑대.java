@@ -1,39 +1,46 @@
 import java.util.*;
+
 class Solution {
-    static int answer = 0;
-    static int[] Info;
-    static ArrayList<Integer>[] childs;
-    public int solution(int[] info, int[][] edges) {
-        Info = info;
-        childs = new ArrayList[info.length];
-        for(int[] e: edges){
-            int p = e[0];
-            int c = e[1];
-            if(childs[p] == null)
-                childs[p] = new ArrayList<>();
-            childs[p].add(c);
+    private Set<Integer> getNext(int node, Set<Integer> nodes, boolean[][] connect) {
+        Set<Integer> nextNodes = new HashSet<>(nodes);
+        nextNodes.remove(node);
+        
+        for(int next = 0; next < connect[node].length; next++) {
+            if(connect[node][next]) {
+                nextNodes.add(next);
+            }
         }
-        List<Integer> list = new ArrayList<>();
-		list.add(0);
-		dfs(0, 0, 0, list);
-        return answer;
+        
+        return nextNodes;
     }
-    public void dfs(int idx, int wolf, int sheep, List<Integer> list){
-        if(Info[idx] == 0)
-            sheep++;
-        else
-            wolf++;
-        if(sheep <= wolf)
-            return;
-        answer = Math.max(answer, sheep);
-        List<Integer> next = new ArrayList<>();
-		next.addAll(list);
-        next.remove(Integer.valueOf(idx));
-        if(childs[idx] != null){
-            for(int c : childs[idx])
-                next.add(c);
+    
+    private int dfs(Set<Integer> nodes, int sheep, int wolf, int[] info, boolean[][] connect) {
+        int maxSheep = sheep;
+        for(int node : nodes) {
+            int nextSheep = sheep;
+            int nextWolf = wolf;
+            if(info[node] == 0) {
+                nextSheep++;
+            } else {
+                nextWolf++;
+            }
+            if(nextWolf >= nextSheep) {
+                continue;
+            }
+            maxSheep = Math.max(dfs(getNext(node, nodes, connect), nextSheep, nextWolf, info, connect), maxSheep);
+        }   
+        return maxSheep;
+    }
+    public int solution(int[] info, int[][] edges) {
+        boolean[][] connect = new boolean[info.length][info.length];
+        
+        for(int[] edge : edges) {
+            connect[edge[0]][edge[1]] = true;
         }
-        for(int n : next)
-            dfs(n, wolf, sheep, next);
+        
+        Set<Integer> nodes = new HashSet<>();
+        nodes.add(0);
+        
+        return dfs(nodes, 0, 0, info, connect);
     }
 }
